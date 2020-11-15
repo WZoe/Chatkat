@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatkat</title>
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+    <!-- The following lines are cited from https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+    <!-- Bootstrap CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Citation End -->
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="color-primary">
+<div class="container">
+    <div class="row">
+<!--        left col: chat rooms list-->
+        <div class="col-3 color-light card">
+            <div class="row ml-2 mt-4 mb-4">
+                <div class="col-2 mr-2"><i class="fas fa-cat fa-3x"></i></div>
+                <div class="col-8">
+                    <h1>Chatkat</h1>
+                </div>
+            </div>
+            <div class="row" id="roomList">
+                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2 selected">
+                    <div class="row">
+                        <i class="ml-5 mr-2 fas fa-lock fa-2x"></i>
+                        <h3>room name</h3>
+                    </div>
+                </div>
+                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2">
+                    <div class="row">
+                        <i class="ml-5 mr-2 fas fa-lock-open fa-2x"></i>
+                        <h3>room name</h3>
+                    </div>
+                </div>
+                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2">
+                    <div class="row">
+                        <i class="ml-5 mr-2 fas fa-lock-open fa-2x"></i>
+                        <h3>room name</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        mid col: chat history-->
+        <div class="col-6">
+            <img src="/img/avatar-1.png"/>
+            <input type="text" id="message_input"/>
+            <button onclick="sendMessage()">send</button>
+            <div id="chatlog"></div>
+        </div>
+<!--        right col: room info-->
+        <div class="col-3 color-light card">
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<footer>
+    <p class="lead mx-auto footer">Zoe Wang & Eimee Yang, 2020/11</p>
+</footer>
+
+<!--JS-->
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/chat-client.js"></script>
+<script>
+    var socketio = io.connect();
+    socketio.on("message_to_client",function(data) {
+        //Append an HR thematic break and the escaped HTML of the new message
+        document.getElementById("chatlog").appendChild(document.createElement("hr"));
+        document.getElementById("chatlog").appendChild(document.createTextNode(data['message']));
+    });
+
+    function sendMessage(){
+        var msg = document.getElementById("message_input").value;
+        socketio.emit("message_to_server", {message:msg});
+    }
+</script>
+<!-- The following line is cited from https://getbootstrap.com/docs/4.5/getting-started/introduction/ and https://fontawesome.com/-->
+<!-- font awesome -->
+<script src="https://kit.fontawesome.com/b53fd5134a.js" crossorigin="anonymous"></script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+<!-- Citation End -->
+</body>
+</html>

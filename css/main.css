@@ -1,0 +1,41 @@
+body {
+    font-family: Optima, serif;
+}
+
+footer {
+    margin-top: 2em;
+    text-align: center;
+    font-size: small;
+    color: white;
+}
+
+.container {
+    padding: 30px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background-color: white;
+    border-radius: 50px;
+    min-width: 80%;
+}
+.color-primary {
+    background-color: lightseagreen;
+}
+/*#0677f4*/
+.card {
+    border-radius: 50px;
+}
+.full-width {
+    width: 100%;
+}
+.color-light {
+    background-color: lightsalmon;
+}
+
+.color-white {
+    background-color: white;
+}
+
+.selected {
+    color: white;
+    background-color: lightseagreen;
+}
