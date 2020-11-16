@@ -42,21 +42,23 @@ io.sockets.on("connection", function (socket) {
         // create user
         let newUser = new myData.User(id, data["name"], data["avatar_id"], null);
         myData.users[id] = newUser;
-        io.sockets.emit("create_user_response", myData.users) // broadcast the message to other users
+        io.sockets.emit("create_user_response", myData.rooms) // broadcast the message to other users
     });
 
     socket.on('create_room', function (data) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // create room
-        let newRoom = new myData.Room(myData.room_id, data["name"], data["password"]);
+        let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
+        // add creator to user list
+        newRoom.user_list.push(myData.users[id]);
         myData.rooms[myData.room_id] = newRoom;
         // set user current room id
         myData.users[id].current_room_id = myData.room_id;
         // socket join room
         socket.join(myData.room_id);
         myData.room_id++;
-        io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
+        io.sockets.emit("create_room_response", newRoom) // broadcast the message to other users
     });
 
     socket.on('send_message', function (data) {
@@ -65,9 +67,9 @@ io.sockets.on("connection", function (socket) {
         // sender is current socket user
         let msg = myData.createMessage(myData.msg_id, data["room_id"], id, data["receiver_id"], data["content"], data["meme_id"]);
         myData.msg_id++;
-        console.log("this msg=",msg)
-        console.log("msg_id=",myData.msg_id);
-        io.sockets.emit("send_message_response", msg) // broadcast the message to other users
+        // only send message to current room
+        let roomId = myData.users[id].current_room_id;
+        io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
     });
 
     socket.on('check_message_target', function (data) {

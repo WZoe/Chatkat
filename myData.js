@@ -73,6 +73,7 @@ function createMessage(msg_id, room_id, sender_id, receiver_id, content, meme_id
 // exports as module
 // variables
 exports.msg_id = msg_id;
+exports.room_id = room_id;
 // arrays
 exports.memes = memes;
 exports.avatars = avatars;

@@ -4,3 +4,7 @@ function createRoom(){
     let newRoomInfo = {"name":roomName,"password":password};
     socketio.emit("create_room", newRoomInfo);
 }
+
+function joinRoom(){
+    
+}

@@ -2,14 +2,36 @@ let socketio;
 $(document).ready(function () {
     socketio = io.connect();
 
-    $("#logInModal").modal("show")
+    $("#roomList").empty();
+    $("#logInModal").modal("show");
 
-    socketio.on("create_user_response",function(users) {
-        //console.log("create_user_success",users);
+    // user logins in
+    socketio.on("create_user_response",function(rooms) {
+        // display all rooms
+        for(let roomId in rooms){
+            let room = rooms[roomId];
+            let lockClass = (room.password == null || room.password=='') ? "fa-lock-open":"fa-lock";
+            $("#roomList").append(`
+        <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2 roomListItem">
+            <div class="row">
+                <i class="ml-5 mr-2 fas ${lockClass} fa-2x"></i>
+                <h4>${room.name}</h4>
+            </div>
+        </div>`);
+        }
     });
 
-    socketio.on("create_room_response",function(rooms) {
-        console.log("create_room_success",rooms);
+    socketio.on("create_room_response",function(newRoom) {
+        console.log(newRoom);
+        let lockClass = (newRoom.password == null || newRoom.password=='') ? "fa-lock-open":"fa-lock";
+        $(".roomListItem").removeClass("selected");
+        $("#roomList").append(`
+        <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2 selected roomListItem">
+            <div class="row">
+                <i class="ml-5 mr-2 fas ${lockClass} fa-2x"></i>
+                <h4>${newRoom.name}</h4>
+            </div>
+        </div>`);
     });
 
     // this response broadcast to all sockets
