@@ -40,8 +40,17 @@ io.sockets.on("connection", function (socket) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // create user
-        let newUser = new myData.User(id, data["name"], data["avatar_id"])
+        let newUser = new myData.User(id, data["name"], data["avatar_id"]);
         myData.users[id] = newUser;
+        io.sockets.emit("create_user_response", myData.users) // broadcast the message to other users
+    });
+
+    socket.on('create_room', function (data) {
+        // This callback runs when the server receives a new message from the client.
+        console.log(data); // log it to the Node.JS output
+        // create room
+        let newRoom = new myData.Room(id, data["name"], data["password"]);
+        myData.rooms[id] = newRoom;
         io.sockets.emit("create_user_response", myData.users) // broadcast the message to other users
     });
 
@@ -49,7 +58,10 @@ io.sockets.on("connection", function (socket) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // sender is current socket user
-        let msg = myData.createMessage(data["room_id"], id, data["receiver_id"], data["content"], data["meme_id"])
+        let msg = myData.createMessage(myData.msg_id, data["room_id"], id, data["receiver_id"], data["content"], data["meme_id"]);
+        myData.msg_id++;
+        console.log("this msg=",msg)
+        console.log("msg_id=",myData.msg_id);
         io.sockets.emit("send_message_response", msg) // broadcast the message to other users
     });
 

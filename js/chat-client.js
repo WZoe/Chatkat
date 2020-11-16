@@ -83,6 +83,11 @@ $(".dropdown-toggle").click(function () {
     // value=0 means everyone
 })
 
+$("#createRoomModalSubmit").click(function(){
+    $("#createRoomModal").modal("toggle")
+    createRoom();
+})
+
 function clearChatLog() {
     $("#chatLog").html("")
 }
