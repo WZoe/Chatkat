@@ -7,12 +7,13 @@ class User{
         user_id++;
     }
 
-    change_avatar(avatar_id){
-        this.avatar_id = avatar_id;
-    }
+    // change_avatar(avatar_id){
+    //     this.avatar_id = avatar_id;
+    // }
 
-    send_message(room_id, sender_id, receiver_id, content, meme_id){
-        const message = createMessage(room_id, sender_id, receiver_id, content, meme_id);
+    create_message(room_id, receiver_id, content, meme_id){
+        const message = createMessage(room_id, this.id, receiver_id, content, meme_id);
+        return message;
     }
 
     create_room(room_name, password, creator_id){
@@ -26,8 +27,9 @@ function createUser(){
     // TODO: session
     $("#logInModalSubmit").click(function(){
         let user_name = $("#nickname").val();
-        let avatar_id = parseInt($(".form-check-input:checked").attr("id").substring(7,));
+        let avatar_id = parseInt($(".form-check-input:checked").val());
         let new_user = new User(user_name, avatar_id)
+        currentUser=new_user
         users.push(new_user);
         console.log(users);
     });
