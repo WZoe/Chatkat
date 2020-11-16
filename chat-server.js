@@ -40,7 +40,7 @@ io.sockets.on("connection", function (socket) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // create user
-        let newUser = new myData.User(id, data["name"], data["avatar_id"]);
+        let newUser = new myData.User(id, data["name"], data["avatar_id"], null);
         myData.users[id] = newUser;
         io.sockets.emit("create_user_response", myData.users) // broadcast the message to other users
     });
@@ -49,9 +49,14 @@ io.sockets.on("connection", function (socket) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // create room
-        let newRoom = new myData.Room(id, data["name"], data["password"]);
-        myData.rooms[id] = newRoom;
-        io.sockets.emit("create_user_response", myData.users) // broadcast the message to other users
+        let newRoom = new myData.Room(myData.room_id, data["name"], data["password"]);
+        myData.rooms[myData.room_id] = newRoom;
+        // set user current room id
+        myData.users[id].current_room_id = myData.room_id;
+        // socket join room
+        socket.join(myData.room_id);
+        myData.room_id++;
+        io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
     });
 
     socket.on('send_message', function (data) {

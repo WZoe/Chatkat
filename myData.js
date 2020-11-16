@@ -10,10 +10,11 @@ let rooms = {};
 
 // classes
 class User{
-    constructor(id, user_name, avatar_id) {
+    constructor(id, user_name, avatar_id, current_room_id) {
         this.id = id;
         this.name = user_name;
         this.avatar_id = avatar_id;
+        this.current_room_id = current_room_id;
     }
 
     create_message(room_id, receiver_id, content, meme_id){

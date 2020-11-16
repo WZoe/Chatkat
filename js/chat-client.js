@@ -8,6 +8,10 @@ $(document).ready(function () {
         //console.log("create_user_success",users);
     });
 
+    socketio.on("create_room_response",function(rooms) {
+        console.log("create_room_success",rooms);
+    });
+
     // this response broadcast to all sockets
     socketio.on("send_message_response",function(data) {
         socketio.emit("check_message_target", data);
