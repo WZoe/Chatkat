@@ -3,7 +3,7 @@ let msg_id = 1;
 let room_id = 1;
 
 // arrays
-let memes = [];
+let memes = ["/img/emoji-1.png", "/img/emoji-2.png","/img/emoji-3.png","/img/emoji-4.png","/img/emoji-5.png","/img/emoji-6.png","/img/emoji-7.png","/img/emoji-8.png","/img/emoji-9.png","/img/emoji-10.png","/img/emoji-11.png","/img/emoji-12.png",];
 let avatars = ["/img/avatar-1.png","/img/avatar-2.png","/img/avatar-3.png","/img/avatar-4.png","/img/avatar-5.png","/img/avatar-6.png","/img/avatar-7.png","/img/avatar-8.png"];
 let users = {};
 let rooms = [];
