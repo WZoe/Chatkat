@@ -8,9 +8,6 @@ $("#logInModalSubmit").click(function () {
     $("#logInModal").modal("toggle")
 })
 
-$("#createRoom").click(function () {
-    $("#logInModal").modal("show")
-})
 
 var socketio = io.connect();
 socketio.on("message_to_client",function(data) {

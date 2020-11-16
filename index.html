@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="row ml-3 mr-3">
-                <button class="btn btn-primary btn-block" id="createRoom"><h3>Create Room</h3></button>
+                <button class="btn btn-secondary btn-block" id="createRoom" data-toggle="modal" data-target="#createRoomModal"><h3>Create Room</h3></button>
             </div>
         </div>
 <!--        mid col: chat history-->
@@ -65,7 +65,7 @@
                     <div class="col-2"><img class="avatar" src="/img/avatar-1.png"/></div>
                 </div>
             </div>
-            <div class="color-primary rounded p-3">
+            <div class="color-primary rounded p-3 ">
             <div class="row ml-1 mr-1 mt-2">
 <!--                modified from https://getbootstrap.com/docs/4.0/components/input-group/-->
                 <div class="input-group">
@@ -87,15 +87,40 @@
         </div>
 <!--        right col: room info-->
         <div class="col-3 color-light rounded p-3">
+            <div class="color-primary rounded text-white p-1 mb-2">
             <h3 class="row m-3">Room Name</h3>
-            <h5 class="row m-3">Created by Creator</h5>
-            <h5 class="row m-3">Online Users</h5>
-            <div class="row" id="onlineUsers">
-
+            <h5 class="row m-3">Creator: <span id="creator"> Creator</span></h5>
             </div>
-            <h5 class="row m-3">Banned Users</h5>
-            <div class="row" id="bannedUsers">
-
+            <div class="color-white rounded p-1  mb-2">
+            <h5 class="row m-3 color-primary text-white p-1">Online Users</h5>
+            <div class="row pl-4 pr-4" id="onlineUsers">
+<!--                button group is modified from https://getbootstrap.com/docs/4.0/components/button-group/-->
+                <div class="user m-2">
+                    <img class="avatar" src="/img/avatar-1.png"/>
+                    <p>USERNAME</p>
+                    <div class="userControl btn-group-sm">
+                        <button class="btn btn-secondary">Kick</button>
+                        <button class="btn btn-danger">Ban</button>
+                    </div>
+                </div>
+                <div class="user m-2">
+                    <img class="avatar" src="/img/avatar-1.png"/>
+                    <p>USERNAME</p>
+                    <div class="userControl btn-group-sm">
+                        <button class="btn btn-secondary">Kick</button>
+                        <button class="btn btn-danger">Ban</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="color-white rounded  p-1  mb-2">
+            <h5 class="row m-3  color-primary text-white p-1">Banned Users</h5>
+            <div class="row   pl-4 pr-4" id="bannedUsers">
+                <div class="user m-2">
+                    <img class="avatar" src="/img/avatar-1.png"/>
+                    <p>USERNAME</p>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -147,6 +172,34 @@
         </div>
     </div>
 </div>
+<!--create room-->
+<div class="modal fade" id="createRoomModal" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" >Create Room</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+            <div class="modal-body" id="createRoomModalBody">
+                <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
+                <div class="form-group">
+                    <input class="form-control" type="text" id="roomName" placeholder="Name your room"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="password" placeholder="Add a password to create a private chat room"/>
+                    <small class="form-text text-muted">Please leave password blank if you want to create a public chat room.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createRoomModalSubmit">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--JS-->
 <!-- The following line is cited from https://getbootstrap.com/docs/4.5/getting-started/introduction/ and https://fontawesome.com/-->
 <!-- font awesome -->
