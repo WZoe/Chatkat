@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body class="color-primary">
-<div class="container">
+<div class="container rounded">
     <div class="row">
 <!--        left col: chat rooms list-->
-        <div class="col-3 color-light card">
+        <div class="col-3 color-light rounded">
             <div class="row ml-2 mt-4 mb-4">
                 <div class="col-2 mr-2"><i class="fas fa-cat fa-3x"></i></div>
                 <div class="col-8">
@@ -24,64 +24,130 @@
                 </div>
             </div>
             <div class="row" id="roomList">
-                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2 selected">
+                <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2 selected">
                     <div class="row">
                         <i class="ml-5 mr-2 fas fa-lock fa-2x"></i>
-                        <h3>room name</h3>
+                        <h4>room name</h4>
                     </div>
                 </div>
-                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2">
+                <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2">
                     <div class="row">
                         <i class="ml-5 mr-2 fas fa-lock-open fa-2x"></i>
-                        <h3>room name</h3>
+                        <h4>room name</h4>
                     </div>
                 </div>
-                <div class="ml-3 mr-3 mb-2 color-white card full-width p-2">
+                <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2">
                     <div class="row">
                         <i class="ml-5 mr-2 fas fa-lock-open fa-2x"></i>
-                        <h3>room name</h3>
+                        <h4>room name</h4>
                     </div>
                 </div>
+            </div>
+            <div class="row ml-3 mr-3">
+                <button class="btn btn-primary btn-block" id="createRoom"><h3>Create Room</h3></button>
             </div>
         </div>
 <!--        mid col: chat history-->
         <div class="col-6">
-            <img src="/img/avatar-1.png"/>
-            <input type="text" id="message_input"/>
-            <button onclick="sendMessage()">send</button>
-            <div id="chatlog"></div>
+            <div class="ml-1 mr-1 p-3" id="chatLog">
+                <div class="msg rounded">
+                    <div class="col-2"><img class="avatar" src="/img/avatar-1.png"/></div>
+                    <div class="col-10">
+                            <b>USERNAME</b>
+                            <p>mesaageadsfasdafasads!!!! adsfasd adsfasd adsfasd adsfasd z</p>
+                    </div>
+                </div>
+                <div class="msg msg-self rounded">
+                    <div class="col-10">
+                        <b>USERNAME</b>
+                        <p>mesaageadsfasdafasads!!!! adsfasd adsfasd adsfasd adsfasd z</p>
+                    </div>
+                    <div class="col-2"><img class="avatar" src="/img/avatar-1.png"/></div>
+                </div>
+            </div>
+            <div class="color-primary rounded p-3">
+            <div class="row ml-1 mr-1 mt-2">
+<!--                modified from https://getbootstrap.com/docs/4.0/components/input-group/-->
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item">Everyone</a>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" id="message_input"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button"><i class="far fa-laugh "></i></button>
+                        <button class="btn btn-primary" type="button" id="send">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            </div>
         </div>
 <!--        right col: room info-->
-        <div class="col-3 color-light card">
+        <div class="col-3 color-light rounded p-3">
+            <h3 class="row m-3">Room Name</h3>
+            <h5 class="row m-3">Created by Creator</h5>
+            <h5 class="row m-3">Online Users</h5>
+            <div class="row" id="onlineUsers">
 
+            </div>
+            <h5 class="row m-3">Banned Users</h5>
+            <div class="row" id="bannedUsers">
+
+            </div>
         </div>
     </div>
 </div>
-
-
-
-
 
 <footer>
     <p class="lead mx-auto footer">Zoe Wang & Eimee Yang, 2020/11</p>
 </footer>
 
+<!--modals-->
+<!--                modal is modified from https://getbootstrap.com/docs/4.0/components/modal/-->
+<!--user login-->
+<div class="modal fade" id="logInModal" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="exampleModalLongTitle">Create New Group</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+            <div class="modal-body" id="logInModalBody">
+                <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
+                <div class="form-group">
+                    <input class="form-control" type="text" id="nickname" name="nickname" placeholder="Pick a nickname"/>
+                </div>
+                <!--                    modified from https://getbootstrap.com/docs/4.0/components/forms/#inline-->
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-1" value="avatar-1" checked>
+                    <label class="form-check-label" for="inlineRadio1"><img class="avatar" src="img/avatar-1.png"/></label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-2" value="avatar-2">
+                    <label class="form-check-label" for="inlineRadio2"><img class="avatar" src="img/avatar-1.png"/></label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-3" value="avatar-3">
+                    <label class="form-check-label" for="inlineRadio3"><img class="avatar" src="img/avatar-1.png"/></label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-4" value="avatar-4">
+                    <label class="form-check-label" for="inlineRadio3"><img class="avatar" src="img/avatar-1.png"/></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="logInModalSubmit">Start Chatting!</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--JS-->
-<script src="/socket.io/socket.io.js"></script>
-<script src="js/chat-client.js"></script>
-<script>
-    var socketio = io.connect();
-    socketio.on("message_to_client",function(data) {
-        //Append an HR thematic break and the escaped HTML of the new message
-        document.getElementById("chatlog").appendChild(document.createElement("hr"));
-        document.getElementById("chatlog").appendChild(document.createTextNode(data['message']));
-    });
-
-    function sendMessage(){
-        var msg = document.getElementById("message_input").value;
-        socketio.emit("message_to_server", {message:msg});
-    }
-</script>
 <!-- The following line is cited from https://getbootstrap.com/docs/4.5/getting-started/introduction/ and https://fontawesome.com/-->
 <!-- font awesome -->
 <script src="https://kit.fontawesome.com/b53fd5134a.js" crossorigin="anonymous"></script>
@@ -98,5 +164,7 @@
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
 <!-- Citation End -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat-client.js"></script>
 </body>
 </html>
