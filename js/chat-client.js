@@ -213,6 +213,8 @@ $("#createRoomModalSubmit").click(function(){
     } else {
         $("#createRoomModal").modal("toggle")
         createRoom();
+        // scroll to bottom
+        $("#roomList").scrollTop($("#roomList")[0].scrollHeight);
     }
 })
 

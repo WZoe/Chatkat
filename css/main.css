@@ -46,7 +46,7 @@ footer {
 
 #roomList {
     overflow: scroll;
-    max-height: 550px;
+    max-height: 500px;
 }
 
 .msg {
