@@ -10,15 +10,26 @@ $(document).ready(function () {
     socketio.on("create_user_response",function(rooms) {
         // display all rooms
         for(let roomId in rooms){
+            console.log(rooms)
             let room = rooms[roomId];
             let lockClass = (room.password == null || room.password=='') ? "fa-lock-open":"fa-lock";
-            $("#roomList").append(`
+            if (roomId==1) {
+                $("#roomList").append(`
+        <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2 selected roomListItem">
+            <div class="row">
+                <i class="ml-5 mr-2 fas ${lockClass} fa-2x"></i>
+                <h4>${room.name}</h4>
+            </div>
+        </div>`);
+            } else {
+                $("#roomList").append(`
         <div class="ml-3 mr-3 mb-2 color-white rounded full-width p-2 roomListItem">
             <div class="row">
                 <i class="ml-5 mr-2 fas ${lockClass} fa-2x"></i>
                 <h4>${room.name}</h4>
             </div>
         </div>`);
+            }
         }
     });
 
@@ -33,6 +44,7 @@ $(document).ready(function () {
                 <h4>${newRoom.name}</h4>
             </div>
         </div>`);
+        clearChatLog();
     });
 
     // this response broadcast to all sockets

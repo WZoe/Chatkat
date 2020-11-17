@@ -5,6 +5,11 @@ const http = require("http"),
     path=require("path");
 let myData=require('./myData');
 
+// create default lobby
+let lobby = new myData.Room(myData.room_id, 0, "Lobby", "");
+myData.rooms[myData.room_id] = lobby;
+myData.room_id++;
+
 const port = 3456;
 // Listen for HTTP connections.  This is essentially a miniature static file server that only serves our one file, client.html, on port 3456:
 const server = http.createServer(function (req, res) {
@@ -40,9 +45,15 @@ io.sockets.on("connection", function (socket) {
         // This callback runs when the server receives a new message from the client.
         console.log(data); // log it to the Node.JS output
         // create user
-        let newUser = new myData.User(id, data["name"], data["avatar_id"], null);
+        let newUser = new myData.User(id, data["name"], data["avatar_id"], 1);
+
+        lobby.user_list.push(newUser);
+        socket.join(1);
+
         myData.users[id] = newUser;
-        io.sockets.emit("create_user_response", myData.rooms) // broadcast the message to other users
+        io.sockets.sockets.get(id).emit("create_user_response", myData.rooms) // broadcast the message to other users
+
+        //todo: update Lobby current Users for non-new user
     });
 
     socket.on('create_room', function (data) {
@@ -50,6 +61,8 @@ io.sockets.on("connection", function (socket) {
         console.log(data); // log it to the Node.JS output
         // create room
         let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
+        // leave room
+        socket.leave(myData.users[id].current_room_id);
         // add creator to user list
         newRoom.user_list.push(myData.users[id]);
         myData.rooms[myData.room_id] = newRoom;
@@ -58,7 +71,9 @@ io.sockets.on("connection", function (socket) {
         // socket join room
         socket.join(myData.room_id);
         myData.room_id++;
-        io.sockets.emit("create_room_response", newRoom) // broadcast the message to other users
+        io.sockets.sockets.get(id).emit("create_room_response", newRoom) // broadcast the message to other users
+
+        // todo: update room list for other non-creator users
     });
 
     socket.on('send_message', function (data) {
