@@ -70,3 +70,13 @@ footer {
 .meme {
     height: 50px;
 }
+
+#typing {
+    height: 2em;
+    width:95%;
+    background-color: lightsalmon;
+    color: white;
+    position: absolute;
+    bottom: 5em;
+    z-index: 99;
+}

@@ -71,6 +71,18 @@ io.sockets.on("connection", function (socket) {
         let roomId = myData.users[id].current_room_id;
         io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
     });
+    
+    socket.on("start_typing", function () {
+        let roomId = myData.users[id].current_room_id;
+        let res = myData.rooms[roomId].user_start_typing(id);
+        io.to(roomId).emit("start_typing_response", res);
+    })
+
+    socket.on("stop_typing", function () {
+        let roomId = myData.users[id].current_room_id;
+        let res = myData.rooms[roomId].user_stop_typing(id);
+        io.to(roomId).emit("stop_typing_response", res);
+    })
 
     socket.on('check_message_target', function (data) {
         // This callback runs when the server receives a new message from the client.

@@ -4,6 +4,7 @@ $(document).ready(function () {
 
     $("#roomList").empty();
     $("#logInModal").modal("show");
+    $("#typing").hide();
 
     // user logins in
     socketio.on("create_user_response",function(rooms) {
@@ -38,6 +39,24 @@ $(document).ready(function () {
     socketio.on("send_message_response",function(data) {
         socketio.emit("check_message_target", data);
     });
+
+    socketio.on("start_typing_response", function (data) {
+        // change typing status
+        if (data.show) {
+            $("#typing").show()
+        }
+        $("#typingName").text(data.user.name)
+    })
+
+    socketio.on("stop_typing_response", function (data) {
+        // change typing status
+        if (data.fade) {
+            $("#typing").hide()
+        } else {
+            $("#typingName").text(data.user.name)
+        }
+    })
+
 
     socketio.on("check_message_target_response",function(data) {
         let content = '';
@@ -124,6 +143,16 @@ function sendMessage(){
     if (msg) {
         let msgInfo = {"room_id":0, "receiver_id":0, "content":msg, "meme_id":-1};
         socketio.emit("send_message", msgInfo);
+        $("#message_input").val("")
     }
 }
 
+// user typing
+$("#message_input").focus(function () {
+    socketio.emit("start_typing");
+})
+
+// user end typing
+$("#message_input").focusout(function () {
+    socketio.emit("stop_typing");
+})
