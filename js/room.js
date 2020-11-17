@@ -93,14 +93,15 @@ function showRHSInfo(data){
     let room = data['room'];
     let creator_name = data['creator']!=null ? data['creator'].name:"Chatkat";
     let onlineUsers = data['online_users'];
-    let banUsers = data['ban_users'];
+    let bannedUsers = data['ban_users'];
+    let avatars = data['avatars'];
     $("#showRoomInfoName").html(room.name);
     $("#creator").html(creator_name);
     $("#onlineUsers").empty();
     for(let i in onlineUsers){
         let user = onlineUsers[i];
         $("#onlineUsers").append(`<div class="user m-2">
-                    <img class="avatar" src="${user.avatar_id}"/>
+                    <img class="avatar" src="${avatars[user.avatar_id]}"/>
                     <p>${user.name}</p>
                     <div class="userControl btn-group-sm">
                         <button class="btn btn-secondary">Kick</button>
@@ -108,5 +109,12 @@ function showRHSInfo(data){
                     </div>
                 </div>`);
     }
-
+    $("#bannedUsers").empty();
+    for(let i in bannedUsers){
+        let user = bannedUsers[i];
+        $("#bannedUsers").append(`<div class="user m-2">
+                    <img class="avatar" src="${avatars[user.avatar_id]}"/>
+                    <p>${user.name}</p>
+                </div>`);
+    }
 }
