@@ -83,5 +83,9 @@ function displayAllRooms(rooms){
 }
 
 function getCurrentRoomId(){
-    socketio.emit("get_current_room", null);
+    socketio.emit("get_current_room_id", null);
+}
+
+function showRHSInfo(room){
+
 }

@@ -1,4 +1,7 @@
 let socketio;
+let currentRoomId;
+let currentRoom;
+
 $(document).ready(function () {
     socketio = io.connect();
 
@@ -12,11 +15,19 @@ $(document).ready(function () {
         displayAllRooms(rooms);
     });
 
-    socketio.on("get_current_room_response",function(roomId) {
+    socketio.on("get_current_room_id_response",function(roomId) {
         if(roomId!=null){
             $(".roomListItem").removeClass("selected");
             $(".roomListItem#"+roomId).addClass("selected");
+            // show RHS info
+            socketio.emit("get_room_info", roomId);
         }
+    });
+
+    socketio.on("get_room_info_response",function(room) {
+        // display all rooms
+        console.log(room)
+        showRHSInfo(room);
     });
 
     socketio.on("join_room_response",function(data) {

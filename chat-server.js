@@ -74,16 +74,27 @@ io.sockets.on("connection", function (socket) {
         io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
     });
 
-    socket.on('get_current_room', function () {
-        console.log("get current room");
+    socket.on('get_current_room_id', function () {
+        console.log("get current room id");
         // respond to each sender
         if(id in myData.users){
             let currentRoomId = myData.users[id].current_room_id;
-            io.sockets.sockets.get(id).emit("get_current_room_response", currentRoomId);
+            io.sockets.sockets.get(id).emit("get_current_room_id_response", currentRoomId);
         }
         else{
-            io.sockets.sockets.get(id).emit("get_current_room_response", null);
+            io.sockets.sockets.get(id).emit("get_current_room_id_response", null);
         }
+    });
+
+    socket.on('get_room_info', function (room_id) {
+        console.log("get room info");
+        let roomId = parseInt(room_id);
+        let room = myData.rooms[roomId];
+        let creator = myData.users[room.creator_id];
+        let onlineUsers = room.user_list.map(userId => myData.users[userId]);
+        let banUsers = room.ban_list.map(userId => myData.users[userId]);
+        // respond to each sender
+        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "online_users":onlineUsers, "ban_users":banUsers});
     });
 
     socket.on('join_room', function (data) {
