@@ -101,8 +101,8 @@ function showRHSInfo(data){
     for(let i in onlineUsers){
         let user = onlineUsers[i];
         $("#onlineUsers").append(`<div class="user m-2">
-                    <img class="avatar" src="${avatars[user.avatar_id]}"/>
-                    <p>${user.name}</p>
+                    <p class="text-center m-0"><img class="avatar" src="${avatars[user.avatar_id]}"/></p>
+                    <p class="text-center m-0">${user.name}</p>
                     <div class="userControl btn-group-sm">
                         <button class="btn btn-secondary">Kick</button>
                         <button class="btn btn-danger">Ban</button>
