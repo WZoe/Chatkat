@@ -80,8 +80,9 @@ function displayAllRooms(rooms){
     getCurrentRoomId();
     // enable switch room
     switchRoom();
-    // change "speak to" to "everyone"
-    $(".dropdown-menu").html(`<a class="dropdown-item" value="0">Everyone</a>`)
+    // change "send to" to "everyone"
+    $(".dropdown-toggle").text("Everyone")
+    $(".dropdown-toggle").val(0)
 }
 
 function getCurrentRoomId(){
