@@ -16,16 +16,6 @@ class User{
         this.avatar_id = avatar_id;
         this.current_room_id = current_room_id;
     }
-
-    create_message(room_id, receiver_id, content, meme_id){
-        const message = createMessage(room_id, this.id, receiver_id, content, meme_id);
-        return message;
-    }
-
-    create_room(room_name, password, creator_id){
-        rooms.push(new Room(room_name, password, creator_id));
-    }
-
 }
 
 class Room{
@@ -34,6 +24,7 @@ class Room{
         this.name = room_name;
         this.password = password;
         this.creator_id = creator_id;
+        // lists that store user_ids
         this.user_list = [];
         this.ban_list = [];
         this.typing = [];
@@ -68,7 +59,9 @@ class Room{
     }
 
     user_in(user_id){
-        this.user_list.push(user_id);
+        if(!this.user_list.includes(user_id)){
+            this.user_list.push(user_id);
+        }
     }
 
     user_out(user_id){

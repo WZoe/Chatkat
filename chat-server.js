@@ -42,8 +42,7 @@ io.sockets.on("connection", function (socket) {
     const id = socket.id;
 
     socket.on('create_user', function (data) {
-        // This callback runs when the server receives a new message from the client.
-        console.log(data); // log it to the Node.JS output
+        console.log("create user");
         // create user
         let newUser = new myData.User(id, data["name"], data["avatar_id"], 1);
 
@@ -57,28 +56,56 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on('create_room', function (data) {
-        // This callback runs when the server receives a new message from the client.
-        console.log(data); // log it to the Node.JS output
+        console.log("create room");
         // create room
         let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
         // leave room
         socket.leave(myData.users[id].current_room_id);
         // add creator to user list
-        newRoom.user_list.push(myData.users[id]);
+        newRoom.user_list.push(id);
         myData.rooms[myData.room_id] = newRoom;
         // set user current room id
         myData.users[id].current_room_id = myData.room_id;
         // socket join room
         socket.join(myData.room_id);
         myData.room_id++;
-        io.sockets.sockets.get(id).emit("create_room_response", newRoom) // broadcast the message to other users
+        io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
+    });
 
-        // todo: update room list for other non-creator users
+    socket.on('get_current_room', function () {
+        console.log("get current room");
+        // respond to each sender
+        if(id in myData.users){
+            let currentRoomId = myData.users[id].current_room_id;
+            io.sockets.sockets.get(id).emit("get_current_room_response", currentRoomId);
+        }
+        else{
+            io.sockets.sockets.get(id).emit("get_current_room_response", null);
+        }
+    });
+
+    socket.on('join_room', function (data) {
+        console.log("join room");
+        let room_id = data['room_id'];
+        // join room
+        myData.rooms[room_id].user_in(id);
+        myData.users[id].current_room_id = room_id;
+        io.sockets.sockets.get(id).emit("join_room_response", myData.rooms[room_id]) // respond just to this user
+    });
+
+    socket.on('leave_room', function () {
+        console.log("leave room");
+        // current user leave current room
+        let room_id = myData.users[id].current_room_id;
+        // exclude users who are not in any room
+        if(room_id!=null){
+            myData.rooms[room_id].user_out(id);
+            myData.users[id].current_room_id = null;
+        }
+        io.sockets.sockets.get(id).emit("leave_room_response", myData.rooms) // respond just to this user
     });
 
     socket.on('send_message', function (data) {
-        // This callback runs when the server receives a new message from the client.
-        console.log(data); // log it to the Node.JS output
         // sender is current socket user
         let msg = myData.createMessage(myData.msg_id, data["room_id"], id, data["receiver_id"], data["content"], data["meme_id"]);
         myData.msg_id++;
@@ -86,7 +113,7 @@ io.sockets.on("connection", function (socket) {
         let roomId = myData.users[id].current_room_id;
         io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
     });
-    
+
     socket.on("start_typing", function () {
         let roomId = myData.users[id].current_room_id;
         let res = myData.rooms[roomId].user_start_typing(id);
@@ -100,8 +127,6 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on('check_message_target', function (data) {
-        // This callback runs when the server receives a new message from the client.
-        console.log(data); // log it to the Node.JS output
         // find sender name
         let sender = myData.users[data['sender_id']];
         let msg={"sender_name":sender.name, "avatar_id":sender.avatar_id};
