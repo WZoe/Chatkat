@@ -58,11 +58,11 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('create_room', function (data) {
         //console.log("create room");
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             // create room
             let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
             // leave current room
-            if(myData.users[id].current_room_id){
+            if (myData.users[id].current_room_id) {
                 // socket leave room
                 socket.leave(myData.users[id].current_room_id);
                 myData.rooms[myData.users[id].current_room_id].user_out(id);
@@ -89,9 +89,9 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('get_room_info', function (room_id) {
         //console.log("get room info");
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             let roomId = parseInt(room_id);
-            if(roomId){
+            if (roomId) {
                 let room = myData.rooms[roomId];
                 let creator = room.creator_id != 0 ? myData.users[room.creator_id] : null;
                 let onlineUsers = room.user_list.map(userId => myData.users[userId]);
@@ -112,7 +112,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('switch_room', function (data) {
         //console.log("switch room");
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             let room_id = parseInt(data['room_id']);
             if (room_id) {
                 let msg = '';
@@ -139,7 +139,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('join_room', function (data) {
         //console.log("join room");
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             let room_id = parseInt(data['room_id']);
             if (room_id) {
                 // join room
@@ -179,13 +179,13 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on('send_message', function (data) {
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             // sender is current socket user
             let msg = myData.createMessage(myData.msg_id, parseInt(data["room_id"]), id, data["receiver_id"], data["content"], parseInt(data["meme_id"]));
             myData.msg_id++;
             // only send message to current room
             let roomId = myData.users[id].current_room_id;
-            if(roomId){
+            if (roomId) {
                 if (data['receiver_id'] == 0) {
                     io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
                 } else {
@@ -201,7 +201,7 @@ io.sockets.on("connection", function (socket) {
         // console.log("start typing", id)
         if (id in myData.users) {
             let roomId = myData.users[id].current_room_id;
-            if(roomId){
+            if (roomId) {
                 let res = myData.rooms[roomId].user_start_typing(id);
                 io.to(roomId).emit("start_typing_response", res);
             }
@@ -210,9 +210,9 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("stop_typing", function () {
         // console.log("stop typing", id)
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             let roomId = myData.users[id].current_room_id;
-            if(roomId){
+            if (roomId) {
                 let res = myData.rooms[roomId].user_stop_typing(id);
                 io.to(roomId).emit("stop_typing_response", res);
             }
@@ -220,8 +220,8 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("request_current_users", function (data) {
-        if(myData.users.hasOwnProperty(id)){
-            if(myData.users[id].current_room_id){
+        if (myData.users.hasOwnProperty(id)) {
+            if (myData.users[id].current_room_id) {
                 let room = myData.rooms[myData.users[id].current_room_id];
                 let users = room.user_list;
                 // console.log("userlist" + users)
@@ -253,7 +253,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('check_message_target', function (data) {
         //console.log("check_message_target", id)
-        if(myData.users.hasOwnProperty(id)){
+        if (myData.users.hasOwnProperty(id)) {
             // find sender name
             let sender = myData.users[data['sender_id']];
             let msg = {"sender_name": sender.name, "avatar_id": sender.avatar_id, "avatars": myData.avatars};
@@ -299,7 +299,7 @@ io.sockets.on("connection", function (socket) {
     socket.on("kick_user", function (userId) {
         //console.log("kick user");
         if (myData.users.hasOwnProperty(userId)) {
-            if(myData.users[userId].current_room_id){
+            if (myData.users[userId].current_room_id) {
                 // kicked user leave current room
                 let roomToLeave = myData.rooms[myData.users[userId].current_room_id];
                 roomToLeave.user_out(userId);
@@ -321,7 +321,7 @@ io.sockets.on("connection", function (socket) {
     socket.on("ban_user", function (userId) {
         //console.log("ban user");
         if (myData.users.hasOwnProperty(userId)) {
-            if(myData.users[id].current_room_id){
+            if (myData.users[id].current_room_id) {
                 // ban user from this room (creator in)
                 let roomToBan = myData.rooms[myData.users[id].current_room_id];
                 roomToBan.ban_user(userId);

@@ -35,18 +35,16 @@ $(document).ready(function () {
     });
 
     socketio.on("switch_room_response", function (data) {
-        console.log("switch room response",data)
+        // console.log("switch room response", data)
         if (data['msg'] == "success") {
             // hide modal
             $(".alert").remove();
-            console.log("removing")
             $("#joinRoomModal").modal("hide");
             // leave current room
             leaveRoom(data);
         } else {
             let modalBody;
             if ($("#joinRoomModal").hasClass('show')) {
-                console.log("joinRoomModal showing")
                 modalBody = $("#joinRoomModalBody");
             } else {
                 $("#joinRoomAlertModal").modal("show");
@@ -54,7 +52,6 @@ $(document).ready(function () {
             }
             // remove previous alerts
             $(".alert").remove();
-            console.log("removing")
             modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
          ${data['msg']}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">

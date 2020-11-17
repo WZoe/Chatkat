@@ -21,12 +21,11 @@ function switchRoomRequest(newRoomId, hasLock) {
     if (hasLock == true) {
         // remove previous alerts
         $(".alert").remove();
-        console.log("removing")
         // show modal
         $("#joinRoomModalFooter").html(`
             <button type="button" class="btn btn-primary" id="joinRoomModalSubmit${newRoomId}">Join</button>
         `)
-        $("#joinRoomModalSubmit"+newRoomId).click(function () {
+        $("#joinRoomModalSubmit" + newRoomId).click(function () {
             let passwordInput = $("#joinRoomPassword").val();
             // remove previous alerts
             $(".alert").remove();
