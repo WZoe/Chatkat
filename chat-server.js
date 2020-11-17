@@ -7,6 +7,7 @@ let myData=require('./myData');
 
 // create default lobby
 let lobby = new myData.Room(myData.room_id, 0, "Lobby", "");
+lobby.user_list = []; // no creator
 myData.rooms[myData.room_id] = lobby;
 myData.room_id++;
 
@@ -90,7 +91,7 @@ io.sockets.on("connection", function (socket) {
         console.log("get room info");
         let roomId = parseInt(room_id);
         let room = myData.rooms[roomId];
-        let creator = myData.users[room.creator_id];
+        let creator = room.creator_id!=0 ? myData.users[room.creator_id]:null;
         let onlineUsers = room.user_list.map(userId => myData.users[userId]);
         let banUsers = room.ban_list.map(userId => myData.users[userId]);
         // respond to each sender
