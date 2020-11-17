@@ -21,12 +21,14 @@ function switchRoomRequest(newRoomId, hasLock) {
     if (hasLock == true) {
         // remove previous alerts
         $(".alert").remove();
+        console.log("removing")
         // show modal
         $("#joinRoomModal").modal("show");
         $("#joinRoomModalSubmit").click(function () {
             let passwordInput = $("#joinRoomPassword").val();
             // remove previous alerts
             $(".alert").remove();
+            console.log("removing")
             // password can't be empty!
             if (passwordInput == '') {
                 $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
@@ -74,6 +76,8 @@ function displayAllRooms(rooms) {
     // change "send to" to "everyone"
     $(".dropdown-toggle").text("Everyone")
     $(".dropdown-toggle").val(0)
+    //clear typing status
+    $("#typing").hide()
 }
 
 function getCurrentRoomId() {
