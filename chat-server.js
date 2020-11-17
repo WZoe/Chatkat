@@ -95,7 +95,7 @@ io.sockets.on("connection", function (socket) {
         let onlineUsers = room.user_list.map(userId => myData.users[userId]);
         let banUsers = room.ban_list.map(userId => myData.users[userId]);
         // respond to each sender
-        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "online_users":onlineUsers, "ban_users":banUsers});
+        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "online_users":onlineUsers, "ban_users":banUsers, "avatars":myData.avatars});
     });
 
     socket.on('join_room', function (data) {
