@@ -23,8 +23,10 @@ function switchRoomRequest(newRoomId, hasLock) {
         $(".alert").remove();
         console.log("removing")
         // show modal
-        $("#joinRoomModal").modal("show");
-        $("#joinRoomModalSubmit").click(function () {
+        $("#joinRoomModalFooter").html(`
+            <button type="button" class="btn btn-primary" id="joinRoomModalSubmit${newRoomId}">Join</button>
+        `)
+        $("#joinRoomModalSubmit"+newRoomId).click(function () {
             let passwordInput = $("#joinRoomPassword").val();
             // remove previous alerts
             $(".alert").remove();
@@ -41,6 +43,7 @@ function switchRoomRequest(newRoomId, hasLock) {
                 socketio.emit("switch_room", {"room_id": newRoomId, "hasLock": hasLock, "password": passwordInput});
             }
         });
+        $("#joinRoomModal").modal("show");
     } else {
         socketio.emit("switch_room", {"room_id": newRoomId, "hasLock": hasLock});
     }
