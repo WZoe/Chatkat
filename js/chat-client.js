@@ -164,7 +164,8 @@ $("#send").click(sendMessage)
 
 // send meme
 $(".memebtn").click(function () {
-    let msgInfo = {"room_id":0, "receiver_id":0, "content":"", "meme_id":this.value-1}
+    let receiver_id = $(".dropdown-toggle").val()
+    let msgInfo = {"room_id":0, "receiver_id":receiver_id, "content":"", "meme_id":this.value-1}
     socketio.emit("send_message", msgInfo);
     $("#memeModal").modal("toggle")
 })
