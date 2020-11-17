@@ -95,18 +95,22 @@ function showRHSInfo(data){
     let onlineUsers = data['online_users'];
     let bannedUsers = data['ban_users'];
     let avatars = data['avatars'];
+    let isCreator = data['isCreator'];
     $("#showRoomInfoName").html(room.name);
     $("#creator").html(creator_name);
     $("#onlineUsers").empty();
     for(let i in onlineUsers){
         let user = onlineUsers[i];
+        let creatorContent = '';
+        if(isCreator==true && user.id!=data['creator'].id){
+            creatorContent = "<div class=\"userControl btn-group-sm\">\n " +
+                "<button class=\"btn btn-secondary\">Kick</button>\n " +
+                "<button class=\"btn btn-danger\">Ban</button>\n </div>";
+        }
         $("#onlineUsers").append(`<div class="user m-2">
                     <p class="text-center m-0"><img class="avatar" src="${avatars[user.avatar_id]}"/></p>
                     <p class="text-center m-0">${user.name}</p>
-                    <div class="userControl btn-group-sm">
-                        <button class="btn btn-secondary">Kick</button>
-                        <button class="btn btn-danger">Ban</button>
-                    </div>
+                    ${creatorContent}
                 </div>`);
     }
     $("#bannedUsers").empty();

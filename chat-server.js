@@ -46,7 +46,7 @@ io.sockets.on("connection", function (socket) {
     socket.on('create_user', function (data) {
         console.log("create user");
         // create user
-        let newUser = new myData.User(id, data["name"], parseInt(data["avatar_id"]), 1);
+        let newUser = new myData.User(id, data["name"], parseInt(data["avatar_id"])-1, 1);
         myData.users[id] = newUser;
         lobby.user_list.push(id);
         socket.join(1);
@@ -96,8 +96,9 @@ io.sockets.on("connection", function (socket) {
         let creator = room.creator_id!=0 ? myData.users[room.creator_id]:null;
         let onlineUsers = room.user_list.map(userId => myData.users[userId]);
         let banUsers = room.ban_list.map(userId => myData.users[userId]);
+        let isCreator = (id==room.creator_id) ? true : false;
         // respond to each sender
-        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "online_users":onlineUsers, "ban_users":banUsers, "avatars":myData.avatars});
+        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "isCreator":isCreator, "online_users":onlineUsers, "ban_users":banUsers, "avatars":myData.avatars});
     });
 
     socket.on('join_room', function (data) {
