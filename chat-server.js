@@ -118,7 +118,7 @@ io.sockets.on("connection", function (socket) {
         }
         // send to room joiner
         io.to(id).emit("join_room_response", {'rooms':myData.rooms, 'msg':msg, 'operator':true}); // respond just to this user
-        // send to other users in the same room  //todo
+        // send to other users in the same room
         socket.to(room_id).emit("join_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
     });
 
@@ -135,7 +135,7 @@ io.sockets.on("connection", function (socket) {
         }
         // send to room leaver
         io.to(id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':true}) // respond just to this user
-        // send to other users in the same room  //todo
+        // send to other users in the same room
         socket.to(room_id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
     });
 
