@@ -54,7 +54,7 @@ io.sockets.on("connection", function (socket) {
         myData.users[id] = newUser;
         io.sockets.sockets.get(id).emit("create_user_response", myData.rooms) // broadcast the message to other users
 
-        //todo: update Lobby current Users for non-new user
+        //todo: update Lobby current Users for non-new user （broadcast to the room this user joins)）
     });
 
     socket.on('create_room', function (data) {
@@ -233,6 +233,18 @@ io.sockets.on("connection", function (socket) {
             io.sockets.sockets.get(id).emit("check_message_target_response", msg)
         }
     });
+
+    socket.on("disconnect", function () {
+        if (myData.users.hasOwnProperty(id)) {
+            //remove from currentRoom's user_list
+            console.log("destroying user"+id)
+            let currentRoom=myData.rooms[myData.users[id].current_room_id]
+            currentRoom.user_out(id)
+            // todo:broadcast to the room this user left
+            //remove from users
+            delete myData.users[id]
+        }
+    })
 });
 
 
