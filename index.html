@@ -15,7 +15,7 @@
 <body class="color-primary">
 <div class="container rounded">
     <div class="row">
-<!--        left col: chat rooms list-->
+        <!--        left col: chat rooms list-->
         <div class="col-3 color-light rounded">
             <div class="row ml-2 mt-4 mb-4">
                 <div class="col-2 mr-2"><i class="fas fa-cat fa-3x"></i></div>
@@ -32,72 +32,76 @@
                 </div>
             </div>
             <div class="row ml-3 mr-3">
-                <button class="btn btn-secondary btn-block" id="createRoom" data-toggle="modal" data-target="#createRoomModal"><h3>Create Room</h3></button>
+                <button class="btn btn-secondary btn-block" id="createRoom" data-toggle="modal"
+                        data-target="#createRoomModal"><h3>Create Room</h3></button>
             </div>
         </div>
-<!--        mid col: chat history-->
+        <!--        mid col: chat history-->
         <div class="col-6" id="chatBox">
             <div class="ml-1 mr-1 p-3" id="chatLog">
             </div>
             <div class="p-1 pl-4" id="typing">
-<span id="typingName">user</span> is typing...
+                <span id="typingName">user</span> is typing...
             </div>
             <div class="color-primary rounded p-3 ">
-            <div class="row ml-1 mr-1 mt-2">
-<!--                modified from https://getbootstrap.com/docs/4.0/components/input-group/-->
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-secondary dropdown-toggle" value="0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everyone</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" value="0">Everyone</a>
+                <div class="row ml-1 mr-1 mt-2">
+                    <!--                modified from https://getbootstrap.com/docs/4.0/components/input-group/-->
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-secondary dropdown-toggle" value="0" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everyone
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" value="0">Everyone</a>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" id="message_input"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="button" data-toggle="modal"
+                                    data-target="#memeModal"><i class="far fa-laugh "></i></button>
+                            <button class="btn btn-primary" type="button" id="send">Send</button>
                         </div>
                     </div>
-                    <input type="text" class="form-control" id="message_input"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#memeModal"><i class="far fa-laugh "></i></button>
-                        <button class="btn btn-primary" type="button" id="send">Send</button>
-                    </div>
                 </div>
-            </div>
 
             </div>
         </div>
-<!--        right col: room info-->
+        <!--        right col: room info-->
         <div class="col-3 color-light rounded p-3">
             <div class="color-primary rounded text-white p-1 mb-2">
                 <h3 class="row m-3"><i class="fas fa-comments mr-2"></i><span id="showRoomInfoName">Lobby</span></h3>
-            <h5 class="row m-3"><i class="fas fa-user-edit mr-2"></i><span id="creator">Chatkat</span></h5>
+                <h5 class="row m-3"><i class="fas fa-user-edit mr-2"></i><span id="creator">Chatkat</span></h5>
             </div>
             <div class="color-white rounded p-1  mb-2">
-            <h5 class="row m-3 color-primary text-white p-1">Online Users</h5>
-            <div class="row pl-4 pr-4" id="onlineUsers">
-<!--                button group is modified from https://getbootstrap.com/docs/4.0/components/button-group/-->
-                <div class="user m-2">
-                    <img class="avatar" src="/img/avatar-1.png"/>
-                    <p>USERNAME</p>
-                    <div class="userControl btn-group-sm">
-                        <button class="btn btn-secondary">Kick</button>
-                        <button class="btn btn-danger">Ban</button>
+                <h5 class="row m-3 color-primary text-white p-1">Online Users</h5>
+                <div class="row pl-4 pr-4" id="onlineUsers">
+                    <!--                button group is modified from https://getbootstrap.com/docs/4.0/components/button-group/-->
+                    <div class="user m-2">
+                        <img class="avatar" src="/img/avatar-1.png"/>
+                        <p class="m-0">USERNAME</p>
+                        <div class="userControl btn-group-sm">
+                            <button class="btn btn-secondary">Kick</button>
+                            <button class="btn btn-danger">Ban</button>
+                        </div>
+                    </div>
+                    <div class="user m-2">
+                        <img class="avatar" src="/img/avatar-1.png"/>
+                        <p class="m-0">USERNAME</p>
+                        <div class="userControl btn-group-sm">
+                            <button class="btn btn-secondary">Kick</button>
+                            <button class="btn btn-danger">Ban</button>
+                        </div>
                     </div>
                 </div>
-                <div class="user m-2">
-                    <img class="avatar" src="/img/avatar-1.png"/>
-                    <p>USERNAME</p>
-                    <div class="userControl btn-group-sm">
-                        <button class="btn btn-secondary">Kick</button>
-                        <button class="btn btn-danger">Ban</button>
-                    </div>
-                </div>
-            </div>
             </div>
             <div class="color-white rounded  p-1  mb-2">
-            <h5 class="row m-3  color-primary text-white p-1">Banned Users</h5>
-            <div class="row   pl-4 pr-4" id="bannedUsers">
-                <div class="user m-2">
-                    <img class="avatar" src="/img/avatar-1.png"/>
-                    <p>USERNAME</p>
+                <h5 class="row m-3  color-primary text-white p-1">Banned Users</h5>
+                <div class="row   pl-4 pr-4" id="bannedUsers">
+                    <div class="user m-2">
+                        <img class="avatar" src="/img/avatar-1.png"/>
+                        <p>USERNAME</p>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -114,25 +118,27 @@
      aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title" id="exampleModalLongTitle">Create New Group</h5>-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                    <span aria-hidden="true">&times;</span>-->
-<!--                </button>-->
-<!--            </div>-->
+            <!--            <div class="modal-header">-->
+            <!--                <h5 class="modal-title" id="exampleModalLongTitle">Create New Group</h5>-->
+            <!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+            <!--                    <span aria-hidden="true">&times;</span>-->
+            <!--                </button>-->
+            <!--            </div>-->
             <div class="modal-body" id="logInModalBody">
                 <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
                 <div class="form-group">
-                    <input class="form-control" type="text" id="nickname" name="nickname" placeholder="Pick a nickname"/>
+                    <input class="form-control" type="text" id="nickname" name="nickname"
+                           placeholder="Pick a nickname"/>
                 </div>
                 <!--                    modified from https://getbootstrap.com/docs/4.0/components/forms/#inline-->
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-1" value="1" checked>
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-1.png"/></label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-1" value="1"
+                           checked>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-1.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-2" value="2">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-2.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-2.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-3" value="3">
@@ -140,23 +146,23 @@
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-4" value="4">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-4.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-4.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-5" value="5">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-5.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-5.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-6" value="6">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-6.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-6.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-7" value="7">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-7.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-7.png"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-8" value="8">
-                    <label class="form-check-label" ><img class="avatar" src="img/avatar-8.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-8.png"/></label>
                 </div>
             </div>
             <div class="modal-footer">
@@ -171,7 +177,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" >Create Room</h5>
+                <h5 class="modal-title">Create Room</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -182,8 +188,10 @@
                     <input class="form-control" type="text" id="roomName" placeholder="Name your room"/>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="password" placeholder="Add a password to create a private chat room"/>
-                    <small class="form-text text-muted">Please leave password blank if you want to create a public chat room.</small>
+                    <input class="form-control" type="text" id="password"
+                           placeholder="Add a password to create a private chat room"/>
+                    <small class="form-text text-muted">Please leave password blank if you want to create a public chat
+                        room.</small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -198,7 +206,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" >Join Room</h5>
+                <h5 class="modal-title">Join Room</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -206,7 +214,8 @@
             <div class="modal-body" id="joinRoomModalBody">
                 <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
                 <div class="form-group">
-                    <input class="form-control" type="text" id="joinRoomPassword" placeholder="Enter password for this private chat room"/>
+                    <input class="form-control" type="text" id="joinRoomPassword"
+                           placeholder="Enter password for this private chat room"/>
                 </div>
             </div>
             <div class="modal-footer">
@@ -221,7 +230,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" >Choose emoji</h5>
+                <h5 class="modal-title">Choose emoji</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -229,18 +238,30 @@
             <div class="modal-body" id="memeModalBody">
                 <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
                 <div class="form-group">
-                    <button class="btn btn-outline-secondary memebtn" value="1"><img class="meme" src="img/emoji-1.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="2"><img class="meme" src="img/emoji-2.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="3"><img class="meme" src="img/emoji-3.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="4"><img class="meme" src="img/emoji-4.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="5"><img class="meme" src="img/emoji-5.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="6"><img class="meme" src="img/emoji-6.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="7"><img class="meme" src="img/emoji-7.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="8"><img class="meme" src="img/emoji-8.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="9"><img class="meme" src="img/emoji-9.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="10"><img class="meme" src="img/emoji-10.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="11"><img class="meme" src="img/emoji-11.png"/></button>
-                    <button class="btn btn-outline-secondary memebtn" value="12"><img class="meme" src="img/emoji-12.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="1"><img class="meme"
+                                                                                     src="img/emoji-1.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="2"><img class="meme"
+                                                                                     src="img/emoji-2.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="3"><img class="meme"
+                                                                                     src="img/emoji-3.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="4"><img class="meme"
+                                                                                     src="img/emoji-4.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="5"><img class="meme"
+                                                                                     src="img/emoji-5.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="6"><img class="meme"
+                                                                                     src="img/emoji-6.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="7"><img class="meme"
+                                                                                     src="img/emoji-7.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="8"><img class="meme"
+                                                                                     src="img/emoji-8.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="9"><img class="meme"
+                                                                                     src="img/emoji-9.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="10"><img class="meme"
+                                                                                      src="img/emoji-10.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="11"><img class="meme"
+                                                                                      src="img/emoji-11.png"/></button>
+                    <button class="btn btn-outline-secondary memebtn" value="12"><img class="meme"
+                                                                                      src="img/emoji-12.png"/></button>
                 </div>
             </div>
         </div>

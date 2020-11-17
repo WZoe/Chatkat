@@ -11,6 +11,8 @@ lobby.user_list = []; // no creator
 myData.rooms[myData.room_id] = lobby;
 myData.room_id++;
 
+// all socket related operations are referenced from https://socket.io/docs/v3/
+
 const port = 3456;
 // Listen for HTTP connections.  This is essentially a miniature static file server that only serves our one file, client.html, on port 3456:
 const server = http.createServer(function (req, res) {
