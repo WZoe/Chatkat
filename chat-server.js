@@ -44,9 +44,9 @@ io.sockets.on("connection", function (socket) {
     socket.on('create_user', function (data) {
         console.log("create user");
         // create user
-        let newUser = new myData.User(id, data["name"], data["avatar_id"], 1);
-
-        lobby.user_list.push(newUser);
+        let newUser = new myData.User(id, data["name"], parseInt(data["avatar_id"]), 1);
+        myData.users[id] = newUser;
+        lobby.user_list.push(id);
         socket.join(1);
 
         myData.users[id] = newUser;
@@ -60,15 +60,18 @@ io.sockets.on("connection", function (socket) {
         // create room
         let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
         // leave room
+        // socket leave room
         socket.leave(myData.users[id].current_room_id);
-        // add creator to user list
-        newRoom.user_list.push(id);
+        myData.rooms[myData.users[id].current_room_id].user_out(id);
         myData.rooms[myData.room_id] = newRoom;
         // set user current room id
         myData.users[id].current_room_id = myData.room_id;
         // socket join room
         socket.join(myData.room_id);
         myData.room_id++;
+        console.log("users:",myData.users)
+        console.log("rooms:",myData.rooms)
+        io.sockets.sockets.get(id).emit("creator_create_room_response", null);
         io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
     });
 
@@ -86,41 +89,64 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('join_room', function (data) {
         console.log("join room");
-        let room_id = data['room_id'];
-        // join room
-        myData.rooms[room_id].user_in(id);
-        myData.users[id].current_room_id = room_id;
-        io.sockets.sockets.get(id).emit("join_room_response", myData.rooms[room_id]) // respond just to this user
+        let room_id = parseInt(data['room_id']);
+        let msg = '';
+        if(data['hasLock']==true){
+            let passwordInput = data['password'];
+            if(passwordInput != myData.rooms[room_id].password){
+                msg = "Your password is not correct! Please try again.";
+            }
+        }
+        if(msg==''){
+            // join room
+            myData.rooms[room_id].user_in(id);
+            myData.users[id].current_room_id = room_id;
+            // socket join room
+            socket.join(room_id);
+            console.log("users:",myData.users)
+            console.log("rooms:",myData.rooms)
+            msg = "success"
+        }
+        io.sockets.sockets.get(id).emit("join_room_response", {'rooms':myData.rooms, 'msg':msg})
     });
 
     socket.on('leave_room', function () {
         console.log("leave room");
         // current user leave current room
         let room_id = myData.users[id].current_room_id;
-        // exclude users who are not in any room
-        if(room_id!=null){
+        // if user set current_room_id
+        if(room_id){
+            // socket leave room
+            socket.leave(room_id);
             myData.rooms[room_id].user_out(id);
             myData.users[id].current_room_id = null;
         }
+        console.log("users:",myData.users)
+        console.log("rooms:",myData.rooms)
+        // TODO: socket leave room
         io.sockets.sockets.get(id).emit("leave_room_response", myData.rooms) // respond just to this user
     });
 
     socket.on('send_message', function (data) {
         // sender is current socket user
-        let msg = myData.createMessage(myData.msg_id, data["room_id"], id, data["receiver_id"], data["content"], data["meme_id"]);
+        let msg = myData.createMessage(myData.msg_id, parseInt(data["room_id"]), id, data["receiver_id"], data["content"], parseInt(data["meme_id"]));
         myData.msg_id++;
         // only send message to current room
         let roomId = myData.users[id].current_room_id;
-        io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
+        io.to(roomId).emit("send_message_response", msg)
     });
 
     socket.on("start_typing", function () {
-        let roomId = myData.users[id].current_room_id;
-        let res = myData.rooms[roomId].user_start_typing(id);
-        io.to(roomId).emit("start_typing_response", res);
+        console.log("start typing")
+        if(id in myData.users){
+            let roomId = myData.users[id].current_room_id;
+            let res = myData.rooms[roomId].user_start_typing(id);
+            io.to(roomId).emit("start_typing_response", res);
+        }
     })
 
     socket.on("stop_typing", function () {
+        console.log("stop typing")
         let roomId = myData.users[id].current_room_id;
         let res = myData.rooms[roomId].user_stop_typing(id);
         io.to(roomId).emit("stop_typing_response", res);

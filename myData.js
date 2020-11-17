@@ -25,7 +25,7 @@ class Room{
         this.password = password;
         this.creator_id = creator_id;
         // lists that store user_ids
-        this.user_list = [];
+        this.user_list = [creator_id];
         this.ban_list = [];
         this.typing = [];
     }
@@ -52,10 +52,6 @@ class Room{
             return {"show":false,"fade":false, "user":users[last]};
         }
 
-    }
-
-    getRoom(){
-        return this;
     }
 
     user_in(user_id){

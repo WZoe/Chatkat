@@ -7,23 +7,49 @@ function createRoom(){
 
 function createRoomSuccess(rooms){
     displayAllRooms(rooms);
-    // automatically join the room he created, show chatbox
-    displayChatBox();
 }
 
 function switchRoom(){
-    console.log("switch room")
     $(".roomListItem").click(function(){
-        console.log("click to switch to room", this.id)
+        let newRoomId = this.id;
+        let hasLock = false;
+        if($(this).children().find('i').hasClass('fa-lock')){
+            hasLock = true;
+        }
         // leave current room
         leaveRoom();
         // join new room
-        joinRoom();
+        joinRoom(newRoomId, hasLock);
     })
 }
 
-function joinRoom(){
-    socketio.emit("join_room", {"room_id":this.id});
+function joinRoom(newRoomId, hasLock){
+    if(hasLock==true){
+        // remove previous alerts
+        $(".alert").remove();
+        // show modal
+        $("#joinRoomModal").modal("show");
+        $("#joinRoomModalSubmit").click(function (){
+            let passwordInput = $("#joinRoomPassword").val();
+            // remove previous alerts
+            $(".alert").remove();
+            // password can't be empty!
+            if(passwordInput==''){
+                $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+             Password cannot be empty!
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>`)
+            }
+            else{
+                socketio.emit("join_room", {"room_id":newRoomId, "hasLock":hasLock, "password":passwordInput});
+            }
+        });
+    }
+    else{
+        socketio.emit("join_room", {"room_id":newRoomId, "hasLock":hasLock});
+    }
 }
 
 function leaveRoom(){
@@ -31,10 +57,10 @@ function leaveRoom(){
     socketio.emit("leave_room", null);
 }
 
-function joinRoomSuccess(room){
-    $(".roomListItem#"+room.id).addClass("selected");
-    // display chatbox
-    displayChatBox();
+function joinRoomSuccess(rooms){
+    $("#joinRoomModal").modal("hide");
+    displayAllRooms(rooms);
+    //$(".roomListItem#"+room.id).addClass("selected");
 }
 
 // call when first login & every time creates a new room
@@ -52,32 +78,10 @@ function displayAllRooms(rooms){
         </div>`);
     }
     getCurrentRoomId();
+    // enable switch room
+    switchRoom();
 }
 
 function getCurrentRoomId(){
     socketio.emit("get_current_room", null);
-}
-
-function displayChatBox(){
-    $("#chatBox").empty();
-    $("#chatBox").append(`<div class="ml-1 mr-1 p-3" id="chatLog">
-            </div>
-            <div class="color-primary rounded p-3 ">
-            <div class="row ml-1 mr-1 mt-2">
-            <!--modified from https://getbootstrap.com/docs/4.0/components/input-group/-->
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-secondary dropdown-toggle" value="0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everyone</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" value="0">Everyone</a>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" id="message_input"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#memeModal"><i class="far fa-laugh "></i></button>
-                        <button class="btn btn-primary" type="button" id="send">Send</button>
-                    </div>
-                </div>
-            </div>
-            </div>`);
 }

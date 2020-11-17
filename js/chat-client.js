@@ -10,8 +10,6 @@ $(document).ready(function () {
     socketio.on("create_user_response",function(rooms) {
         // display all rooms
         displayAllRooms(rooms);
-        // allow user to join room
-        switchRoom();
     });
 
     socketio.on("get_current_room_response",function(roomId) {
@@ -21,18 +19,33 @@ $(document).ready(function () {
         }
     });
 
-    socketio.on("join_room_response",function(room) {
-        console.log(room);
-        joinRoomSuccess(room);
+    socketio.on("join_room_response",function(data) {
+        if(data['msg']=="success"){
+            joinRoomSuccess(data['rooms']);
+        }
+        else{
+            // remove previous alerts
+            $(".alert").remove();
+            $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+             ${data['msg']}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>`)
+        }
     });
 
     socketio.on("leave_room_response",function(rooms) {
-        console.log(rooms);
+        clearChatLog();
+    });
+
+    // only for room creator
+    socketio.on("creator_create_room_response",function() {
+        clearChatLog();
     });
 
     socketio.on("create_room_response",function(rooms) {
         createRoomSuccess(rooms);
-        clearChatLog();
     });
 
     // this response broadcast to all sockets
