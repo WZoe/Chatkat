@@ -43,7 +43,7 @@ io.sockets.on("connection", function (socket) {
     const id = socket.id;
 
     socket.on('create_user', function (data) {
-        console.log("create user");
+        //console.log("create user");
         // create user
         let newUser = new myData.User(id, data["name"], parseInt(data["avatar_id"]) - 1, 1);
         myData.users[id] = newUser;
@@ -57,7 +57,7 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on('create_room', function (data) {
-        console.log("create room");
+        //console.log("create room");
         // create room
         let newRoom = new myData.Room(myData.room_id, id, data["name"], data["password"]);
         // leave room
@@ -75,7 +75,7 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on('get_current_room_id', function () {
-        console.log("get current room id");
+        //console.log("get current room id");
         // respond to each sender
         if (id in myData.users) {
             let currentRoomId = myData.users[id].current_room_id;
@@ -86,7 +86,7 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on('get_room_info', function (room_id) {
-        console.log("get room info");
+        //console.log("get room info");
         let roomId = parseInt(room_id);
         let room = myData.rooms[roomId];
         let creator = room.creator_id != 0 ? myData.users[room.creator_id] : null;
@@ -104,51 +104,67 @@ io.sockets.on("connection", function (socket) {
         });
     });
 
-    socket.on('join_room', function (data) {
-        console.log("join room");
+    socket.on('switch_room', function (data) {
+        //console.log("switch room");
         let room_id = parseInt(data['room_id']);
-        let msg = '';
-        // if room has password
-        if (data['hasLock'] == true) {
-            let passwordInput = data['password'];
-            if (passwordInput != myData.rooms[room_id].password) {
-                msg = "Your password is not correct! Please try again.";
+        if (room_id) {
+            let msg = '';
+            // if room has password
+            if (data['hasLock'] == true) {
+                let passwordInput = data['password'];
+                if (passwordInput != myData.rooms[room_id].password) {
+                    msg = "Your password is not correct! Please try again.";
+                }
             }
+            // check if user is banned from this room
+            if (myData.rooms[room_id].ban_list.includes(id)) {
+                msg = "You're banned from this room!";
+            }
+            if (msg == '') {
+                msg = "success"
+            }
+            data['msg'] = msg;
+            // send to room joiner
+            io.to(id).emit("switch_room_response", data); // respond just to this user
         }
-        // check if user is banned from this room
-        if (myData.rooms[room_id].ban_list.includes(id)) {
-            msg = "You're banned from this room! Directing you back to Lobby...";
-        }
-        if (msg == '') {
+    });
+
+    socket.on('join_room', function (data) {
+        //console.log("join room");
+        let room_id = parseInt(data['room_id']);
+        if (room_id) {
             // join room
             myData.rooms[room_id].user_in(id);
             myData.users[id].current_room_id = room_id;
             // socket join room
             socket.join(room_id);
-            msg = "success"
+            // send to room joiner
+            io.to(id).emit("join_room_response", {'rooms': myData.rooms, 'operator': true}); // respond just to this user
+            // send to other users in the same room
+            socket.to(room_id).emit("join_room_response", {'rooms': myData.rooms, 'operator': false}); // send to all users in room except sender
         }
-        // send to room joiner
-        io.to(id).emit("join_room_response", {'rooms': myData.rooms, 'msg': msg, 'operator': true}); // respond just to this user
-        // send to other users in the same room
-        socket.to(room_id).emit("join_room_response", {'rooms': myData.rooms, 'operator': false}); // send to all users in room except sender
     });
 
-    socket.on('leave_room', function () {
-        console.log("leave room");
-        if(myData.users.hasOwnProperty(id)){
+    socket.on('leave_room', function (data) {
+        //console.log("leave room");
+        if (myData.users.hasOwnProperty(id)) {
             // current user leave current room
             let room_id = myData.users[id].current_room_id;
             // if user set current_room_id
-            if(room_id){
+            if (room_id) {
                 // socket leave room
                 socket.leave(room_id);
                 myData.rooms[room_id].user_out(id);
                 myData.users[id].current_room_id = null;
             }
             // send to room leaver
-            io.to(id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':true}) // respond just to this user
+            io.to(id).emit("leave_room_response", {'room_id': data['room_id'], 'rooms': myData.rooms, 'operator': true}) // respond just to this user
             // send to other users in the same room
-            socket.to(room_id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
+            socket.to(room_id).emit("leave_room_response", {
+                'room_id': data['room_id'],
+                'rooms': myData.rooms,
+                'operator': false
+            }); // send to all users in room except sender
         }
     });
 
@@ -212,7 +228,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on('check_message_target', function (data) {
-        console.log("check_message_target", id)
+        //console.log("check_message_target", id)
         // find sender name
         let sender = myData.users[data['sender_id']];
         let msg = {"sender_name": sender.name, "avatar_id": sender.avatar_id, "avatars": myData.avatars};
@@ -243,9 +259,9 @@ io.sockets.on("connection", function (socket) {
     socket.on("disconnect", function () {
         if (myData.users.hasOwnProperty(id)) {
             //remove from currentRoom's user_list
-            console.log("destroying user"+id)
-            if(myData.users[id].current_room_id){
-                let currentRoom=myData.rooms[myData.users[id].current_room_id]
+            //console.log("destroying user"+id)
+            if (myData.users[id].current_room_id) {
+                let currentRoom = myData.rooms[myData.users[id].current_room_id]
                 currentRoom.user_out(id)
                 //remove from users
                 delete myData.users[id]
@@ -255,7 +271,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("kick_user", function (userId) {
-        console.log("kick user");
+        //console.log("kick user");
         if (myData.users.hasOwnProperty(userId)) {
             // kicked user leave current room
             let roomToLeave = myData.rooms[myData.users[userId].current_room_id];
@@ -275,7 +291,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("ban_user", function (userId) {
-        console.log("ban user");
+        //console.log("ban user");
         if (myData.users.hasOwnProperty(userId)) {
             // ban user from this room (creator in)
             let roomToBan = myData.rooms[myData.users[id].current_room_id];

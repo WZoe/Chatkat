@@ -12,14 +12,12 @@ function switchRoom() {
         if ($(this).children().find('i').hasClass('fa-lock')) {
             hasLock = true;
         }
-        // leave current room
-        leaveRoom();
         // join new room
-        joinRoom(newRoomId, hasLock);
+        switchRoomRequest(newRoomId, hasLock);
     })
 }
 
-function joinRoom(newRoomId, hasLock) {
+function switchRoomRequest(newRoomId, hasLock) {
     if (hasLock == true) {
         // remove previous alerts
         $(".alert").remove();
@@ -38,22 +36,21 @@ function joinRoom(newRoomId, hasLock) {
               </button>
             </div>`)
             } else {
-                socketio.emit("join_room", {"room_id": newRoomId, "hasLock": hasLock, "password": passwordInput});
+                socketio.emit("switch_room", {"room_id": newRoomId, "hasLock": hasLock, "password": passwordInput});
             }
         });
     } else {
-        socketio.emit("join_room", {"room_id": newRoomId, "hasLock": hasLock});
+        socketio.emit("switch_room", {"room_id": newRoomId, "hasLock": hasLock});
     }
 }
 
-function leaveRoom() {
-    $(".roomListItem").removeClass("selected");
-    socketio.emit("leave_room");
+function joinRoom(data) {
+    socketio.emit("join_room", {"room_id": data['room_id']});
 }
 
-function joinRoomSuccess(rooms) {
-    $("#joinRoomModal").modal("hide");
-    displayAllRooms(rooms);
+function leaveRoom(data) {
+    $(".roomListItem").removeClass("selected");
+    socketio.emit("leave_room", data);
 }
 
 // call when first login & every time creates a new room

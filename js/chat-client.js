@@ -34,43 +34,44 @@ $(document).ready(function () {
         showRHSInfo(data);
     });
 
-    socketio.on("join_room_response", function (data) {
-        // console.log("join room response", data)
-        if (data['operator'] == true) {
-            if (data['msg'] == "success") {
-                joinRoomSuccess(data['rooms']);  // include display all rooms
-            }
-            else{
-                let modalBody;
-                if($("#joinRoomModal").hasClass('show')){
-                    modalBody = $("#joinRoomModalBody");
-                } else {
-                    $("#joinRoomAlertModal").modal("show");
-                    modalBody = $("#joinRoomAlertModalBody");
-                }
-                // remove previous alerts
-                $(".alert").remove();
-                modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
-             ${data['msg']}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>`)
-                modalBody.prev().find('.close').click(function(){
-                    console.log("click close modal")
-                    // join room failed, join back to lobby
-                    socketio.emit("join_room", {"room_id":1, "hasLock":false});
-                });
-            }
+    socketio.on("switch_room_response", function (data) {
+        //console.log("switch room response",data)
+        if (data['msg'] == "success") {
+            // leave current room
+            leaveRoom(data);
         } else {
-            displayAllRooms(data['rooms']);
+            let modalBody;
+            if ($("#joinRoomModal").hasClass('show')) {
+                modalBody = $("#joinRoomModalBody");
+            } else {
+                $("#joinRoomAlertModal").modal("show");
+                modalBody = $("#joinRoomAlertModalBody");
+            }
+            // remove previous alerts
+            $(".alert").remove();
+            modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+         ${data['msg']}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>`)
         }
     });
 
     socketio.on("leave_room_response", function (data) {
-        // console.log("leave room response", data);
+        //console.log("leave room response", data);
         if (data['operator'] == true) {
             clearChatLog();
+            // join new room after leave room
+            joinRoom(data);
+        }
+        displayAllRooms(data['rooms']);
+    });
+
+    socketio.on("join_room_response", function (data) {
+        //console.log("join room response", data)
+        if (data['operator'] == true) {
+            $("#joinRoomModal").modal("hide");
         }
         displayAllRooms(data['rooms']);
     });
