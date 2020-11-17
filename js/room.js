@@ -5,10 +5,6 @@ function createRoom(){
     socketio.emit("create_room", newRoomInfo);
 }
 
-function createRoomSuccess(rooms){
-    displayAllRooms(rooms);
-}
-
 function switchRoom(){
     $(".roomListItem").click(function(){
         let newRoomId = this.id;

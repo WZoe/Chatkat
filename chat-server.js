@@ -52,9 +52,8 @@ io.sockets.on("connection", function (socket) {
         socket.join(1);
 
         myData.users[id] = newUser;
-        io.sockets.sockets.get(id).emit("create_user_response", myData.rooms) // broadcast the message to other users
-
-        //todo: update Lobby current Users for non-new user （broadcast to the room this user joins)）
+        // broadcast to all lobby users to update online users
+        io.to(1).emit("create_user_response", myData.rooms);
     });
 
     socket.on('create_room', function (data) {
@@ -71,10 +70,8 @@ io.sockets.on("connection", function (socket) {
         // socket join room
         socket.join(myData.room_id);
         myData.room_id++;
-        console.log("users:",myData.users)
-        console.log("rooms:",myData.rooms)
-        io.sockets.sockets.get(id).emit("creator_create_room_response", null);
-        io.sockets.emit("create_room_response", myData.rooms) // broadcast the message to other users
+        io.to(id).emit("create_room_response", {'operator':true, 'rooms':myData.rooms});
+        socket.broadcast.emit("create_room_response", {'operator':false, 'rooms':myData.rooms}) // broadcast to every sockets but the sender
     });
 
     socket.on('get_current_room_id', function () {
@@ -82,10 +79,10 @@ io.sockets.on("connection", function (socket) {
         // respond to each sender
         if(id in myData.users){
             let currentRoomId = myData.users[id].current_room_id;
-            io.sockets.sockets.get(id).emit("get_current_room_id_response", currentRoomId);
+            io.to(id).emit("get_current_room_id_response", currentRoomId);
         }
         else{
-            io.sockets.sockets.get(id).emit("get_current_room_id_response", null);
+            io.to(id).emit("get_current_room_id_response");
         }
     });
 
@@ -98,7 +95,7 @@ io.sockets.on("connection", function (socket) {
         let banUsers = room.ban_list.map(userId => myData.users[userId]);
         let isCreator = (id==room.creator_id) ? true : false;
         // respond to each sender
-        io.sockets.sockets.get(id).emit("get_room_info_response", {"room":room, "creator":creator, "isCreator":isCreator, "online_users":onlineUsers, "ban_users":banUsers, "avatars":myData.avatars});
+        io.to(id).emit("get_room_info_response", {"room":room, "creator":creator, "isCreator":isCreator, "online_users":onlineUsers, "ban_users":banUsers, "avatars":myData.avatars});
     });
 
     socket.on('join_room', function (data) {
@@ -117,11 +114,12 @@ io.sockets.on("connection", function (socket) {
             myData.users[id].current_room_id = room_id;
             // socket join room
             socket.join(room_id);
-            console.log("users:",myData.users)
-            console.log("rooms:",myData.rooms)
             msg = "success"
         }
-        io.sockets.sockets.get(id).emit("join_room_response", {'rooms':myData.rooms, 'msg':msg})
+        // send to room joiner
+        io.to(id).emit("join_room_response", {'rooms':myData.rooms, 'msg':msg, 'operator':true}); // respond just to this user
+        // send to other users in the same room  //todo
+        socket.to(room_id).emit("join_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
     });
 
     socket.on('leave_room', function () {
@@ -135,10 +133,10 @@ io.sockets.on("connection", function (socket) {
             myData.rooms[room_id].user_out(id);
             myData.users[id].current_room_id = null;
         }
-        console.log("users:",myData.users)
-        console.log("rooms:",myData.rooms)
-        // TODO: socket leave room
-        io.sockets.sockets.get(id).emit("leave_room_response", myData.rooms) // respond just to this user
+        // send to room leaver
+        io.to(id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':true}) // respond just to this user
+        // send to other users in the same room  //todo
+        socket.to(room_id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
     });
 
     socket.on('send_message', function (data) {
@@ -151,8 +149,8 @@ io.sockets.on("connection", function (socket) {
             io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
         } else {
             console.log("sending to only 2 people")
-            io.sockets.sockets.get(id).emit("send_message_response", msg);
-            io.sockets.sockets.get(data['receiver_id']).emit("send_message_response", msg);
+            io.to(id).emit("send_message_response", msg);
+            io.to(data['receiver_id']).emit("send_message_response", msg);
         }
     });
 
@@ -185,7 +183,7 @@ io.sockets.on("connection", function (socket) {
                 }
             }
             let msg = {"users": otherUsers};
-            io.sockets.sockets.get(id).emit("request_current_users_response", msg)
+            io.to(id).emit("request_current_users_response", msg)
             console.log(msg)
         } else {
             let allUsers=[];
@@ -195,7 +193,7 @@ io.sockets.on("connection", function (socket) {
                 }
             }
             let msg = {"users": allUsers};
-            io.sockets.sockets.get(id).emit("request_current_users_response", msg)
+            io.to(id).emit("request_current_users_response", msg)
             console.log(msg)
         }
 
@@ -205,7 +203,7 @@ io.sockets.on("connection", function (socket) {
         console.log(data)
         // find sender name
         let sender = myData.users[data['sender_id']];
-        let msg={"sender_name":sender.name, "avatar_id":sender.avatar_id};
+        let msg={"sender_name":sender.name, "avatar_id":sender.avatar_id, "avatars":myData.avatars};
         // check if sender is myself
         if(sender.id == id){
             msg["self"] = true;
@@ -223,15 +221,13 @@ io.sockets.on("connection", function (socket) {
         }
         // send private message to target user
         if(data['receiver_id']!=0){
-            // data['receiver_id'] = id;  // just for test purpose
-            // io.sockets.sockets is a map object
             msg["private"] = true
             msg["receiver_name"]=myData.users[data['receiver_id']].name
-            io.sockets.sockets.get(data['requester']).emit("check_message_target_response", msg)
+            io.to(data['requester']).emit("check_message_target_response", msg)
         }
         else{  // broadcast the message to other users
             msg['private'] = false
-            io.sockets.sockets.get(id).emit("check_message_target_response", msg)
+            io.to(id).emit("check_message_target_response", msg)
         }
     });
 
@@ -244,6 +240,7 @@ io.sockets.on("connection", function (socket) {
             // todo:broadcast to the room this user left
             //remove from users
             delete myData.users[id]
+            io.to(currentRoom.id).emit("disconnect_response", myData.rooms);
         }
     })
 });

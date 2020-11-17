@@ -9,9 +9,15 @@ $(document).ready(function () {
     $("#logInModal").modal("show");
     $("#typing").hide();
 
-    // user logins in
+    // user login
     socketio.on("create_user_response",function(rooms) {
         // display all rooms
+        displayAllRooms(rooms);
+    });
+
+    // user logout
+    socketio.on("disconnect_response",function(rooms) {
+        // update all rooms
         displayAllRooms(rooms);
     });
 
@@ -31,32 +37,42 @@ $(document).ready(function () {
     });
 
     socketio.on("join_room_response",function(data) {
-        if(data['msg']=="success"){
-            joinRoomSuccess(data['rooms']);
-        }
-        else{
-            // remove previous alerts
-            $(".alert").remove();
-            $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+        console.log("join room response", data)
+        if(data['operator']==true){
+            if(data['msg']=="success"){
+                joinRoomSuccess(data['rooms']);
+            }
+            else{
+                // remove previous alerts
+                $(".alert").remove();
+                $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
              ${data['msg']}
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>`)
+            }
+        }
+        else{
+            displayAllRooms(data['rooms']);
         }
     });
 
-    socketio.on("leave_room_response",function(rooms) {
-        clearChatLog();
+    socketio.on("leave_room_response",function(data) {
+        console.log("leave room response", data);
+        if(data['operator']==true) {
+            clearChatLog();
+        }
+        else{
+            displayAllRooms(data['rooms']);
+        }
     });
 
-    // only for room creator
-    socketio.on("creator_create_room_response",function() {
-        clearChatLog();
-    });
-
-    socketio.on("create_room_response",function(rooms) {
-        createRoomSuccess(rooms);
+    socketio.on("create_room_response",function(data) {
+        if(data['operator']==true) {
+            clearChatLog();
+        }
+        displayAllRooms(data['rooms']);
     });
 
     // this response broadcast to all sockets
@@ -92,6 +108,7 @@ $(document).ready(function () {
         else{
             content = "<p><img class='meme' src='"+data['meme_url']+"' alt='meme'/></p>";
         }
+        let avatars = data['avatars'];
         if(data['self']){
             if (data["private"]) {
                 $("#chatLog").append(`
@@ -100,7 +117,7 @@ $(document).ready(function () {
                     <b>You said to ${data["receiver_name"]} in private</b>
                     ${content}
                 </div>
-                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+                <div class="col-2"><img class="avatar" src="${avatars[data['avatar_id']]}"/></div>
             </div>`);
             } else {
                 $("#chatLog").append(`
@@ -109,7 +126,7 @@ $(document).ready(function () {
                     <b>${data['sender_name']}</b>
                     ${content}
                 </div>
-                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+                <div class="col-2"><img class="avatar" src="${avatars[data['avatar_id']]}"/></div>
             </div>`);
             }
         }
@@ -117,7 +134,7 @@ $(document).ready(function () {
            if (data["private"]) {
                $("#chatLog").append(`
                 <div class="msg rounded">
-                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+                <div class="col-2"><img class="avatar" src="${avatars[data['avatar_id']]}"/></div>
                 <div class="col-10">
                     <b>${data['sender_name']} said to you in private:</b>
                     ${content}
@@ -126,7 +143,7 @@ $(document).ready(function () {
            } else {
                $("#chatLog").append(`
                 <div class="msg rounded">
-                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+                <div class="col-2"><img class="avatar" src="${avatars[data['avatar_id']]}"/></div>
                 <div class="col-10">
                     <b>${data['sender_name']}</b>
                     ${content}
