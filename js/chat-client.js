@@ -50,6 +50,7 @@ $(document).ready(function () {
 
     // this response broadcast to all sockets
     socketio.on("send_message_response",function(data) {
+        data["requester"]=socketio.id;
         socketio.emit("check_message_target", data);
     });
 
@@ -72,6 +73,7 @@ $(document).ready(function () {
 
 
     socketio.on("check_message_target_response",function(data) {
+        console.log(data)
         let content = '';
         if(data['type']=='content'){
             content = "<p>"+data['content']+"</p>";
@@ -80,7 +82,17 @@ $(document).ready(function () {
             content = "<p><img class='meme' src='"+data['meme_url']+"' alt='meme'/></p>";
         }
         if(data['self']){
-            $("#chatLog").append(`
+            if (data["private"]) {
+                $("#chatLog").append(`
+                <div class="msg msg-self rounded">
+                <div class="col-10">
+                    <b>You said to ${data["receiver_name"]} in private</b>
+                    ${content}
+                </div>
+                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+            </div>`);
+            } else {
+                $("#chatLog").append(`
                 <div class="msg msg-self rounded">
                 <div class="col-10">
                     <b>${data['sender_name']}</b>
@@ -88,9 +100,20 @@ $(document).ready(function () {
                 </div>
                 <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
             </div>`);
+            }
         }
        else{
-            $("#chatLog").append(`
+           if (data["private"]) {
+               $("#chatLog").append(`
+                <div class="msg rounded">
+                <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
+                <div class="col-10">
+                    <b>${data['sender_name']} said to you in private:</b>
+                    ${content}
+                </div>
+            </div>`);
+           } else {
+               $("#chatLog").append(`
                 <div class="msg rounded">
                 <div class="col-2"><img class="avatar" src="/img/avatar-${data['avatar_id']}.png"/></div>
                 <div class="col-10">
@@ -98,6 +121,8 @@ $(document).ready(function () {
                     ${content}
                 </div>
             </div>`);
+           }
+
        }
        // scroll to bottom
         $("#chatLog").scrollTop($("#chatLog")[0].scrollHeight);
@@ -136,9 +161,30 @@ $(".memebtn").click(function () {
 // send to js behavior
 $(".dropdown-toggle").click(function () {
     // request current user list
+    socketio.emit("request_current_users", {"exclude_self": true});
 
-    // change drop down item, bond value & bond dropdown toggle value
-    // value=0 means everyone
+    socketio.on("request_current_users_response",function(data) {
+        // change drop down item, bond value & bond dropdown toggle value
+        let users = data["users"];
+        $(".dropdown-menu").html(`<a class="dropdown-item" value="0">Everyone</a>`)
+        let cnt = 1;
+        for (let i in users) {
+            let user = users[i]
+            console.log(user)
+            $(".dropdown-menu").append(`
+            <a class="dropdown-item" value="${user.id}">${user.name}</a>
+            `)
+            cnt++;
+        }
+
+        $(".dropdown-item").click(function () {
+            let id = this.getAttribute("value")
+            let name = this.innerText
+            $(".dropdown-toggle").text(name)
+            $(".dropdown-toggle").val(id)
+        })
+        // value=0 means everyone
+    });
 })
 
 $("#createRoomModalSubmit").click(function(){
@@ -165,8 +211,9 @@ function clearChatLog() {
 function sendMessage(){
     //check empty msg
     let msg = document.getElementById("message_input").value;
+    let receiver_id = $(".dropdown-toggle").val()
     if (msg) {
-        let msgInfo = {"room_id":0, "receiver_id":0, "content":msg, "meme_id":-1};
+        let msgInfo = {"room_id":0, "receiver_id":receiver_id, "content":msg, "meme_id":-1};
         socketio.emit("send_message", msgInfo);
         $("#message_input").val("")
     }

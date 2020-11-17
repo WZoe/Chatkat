@@ -19,7 +19,6 @@ const server = http.createServer(function (req, res) {
         __dirname,
         req.url === "/" ? "index.html" : req.url
     );
-    console.log(file)
     fs.readFile(file, function (err, data) {
         // This callback runs when the client.html file has been read from the filesystem.
 
@@ -133,7 +132,13 @@ io.sockets.on("connection", function (socket) {
         myData.msg_id++;
         // only send message to current room
         let roomId = myData.users[id].current_room_id;
-        io.to(roomId).emit("send_message_response", msg)
+        if (data['receiver_id'] == 0) {
+            io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
+        } else {
+            console.log("sending to only 2 people")
+            io.sockets.sockets.get(id).emit("send_message_response", msg);
+            io.sockets.sockets.get(data['receiver_id']).emit("send_message_response", msg);
+        }
     });
 
     socket.on("start_typing", function () {
@@ -152,7 +157,37 @@ io.sockets.on("connection", function (socket) {
         io.to(roomId).emit("stop_typing_response", res);
     })
 
+    socket.on("request_current_users", function (data) {
+        let room = myData.rooms[myData.users[id].current_room_id];
+        let users = room.user_list;
+        console.log("userlist"+users)
+        if (data["exclude_self"]) {
+            let otherUsers = [];
+            for (let i in users) {
+                if (users[i]!=id && users[i]!=0) {
+                    console.log(users[i])
+                    otherUsers.push(myData.users[users[i]])
+                }
+            }
+            let msg = {"users": otherUsers};
+            io.sockets.sockets.get(id).emit("request_current_users_response", msg)
+            console.log(msg)
+        } else {
+            let allUsers=[];
+            for (let i in users) {
+                if (users[i] !=0) {
+                    allUsers.push(myData.users[users[i]])
+                }
+            }
+            let msg = {"users": allUsers};
+            io.sockets.sockets.get(id).emit("request_current_users_response", msg)
+            console.log(msg)
+        }
+
+    })
+
     socket.on('check_message_target', function (data) {
+        console.log(data)
         // find sender name
         let sender = myData.users[data['sender_id']];
         let msg={"sender_name":sender.name, "avatar_id":sender.avatar_id};
@@ -172,13 +207,16 @@ io.sockets.on("connection", function (socket) {
             msg["content"] = data['content'];
         }
         // send private message to target user
-        if(data['receiver_id']!=null){
-            data['receiver_id'] = id;  // just for test purpose
+        if(data['receiver_id']!=0){
+            // data['receiver_id'] = id;  // just for test purpose
             // io.sockets.sockets is a map object
-            io.sockets.sockets.get(data['receiver_id']).emit("check_message_target_response", msg)
+            msg["private"] = true
+            msg["receiver_name"]=myData.users[data['receiver_id']].name
+            io.sockets.sockets.get(data['requester']).emit("check_message_target_response", msg)
         }
         else{  // broadcast the message to other users
-            io.sockets.emit("check_message_target_response", msg)
+            msg['private'] = false
+            io.sockets.sockets.get(id).emit("check_message_target_response", msg)
         }
     });
 });

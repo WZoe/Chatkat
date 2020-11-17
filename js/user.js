@@ -4,3 +4,4 @@ function createUser(){
     let newUserInfo = {"name":userName,"avatar_id":avatarId};
     socketio.emit("create_user", newUserInfo);
 }
+
