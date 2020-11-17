@@ -118,8 +118,8 @@ function showRHSInfo(data){
     for(let i in bannedUsers){
         let user = bannedUsers[i];
         $("#bannedUsers").append(`<div class="user m-2">
-                    <img class="avatar" src="${avatars[user.avatar_id]}"/>
-                    <p>${user.name}</p>
+                    <p class="text-center m-0"><img class="avatar" src="${avatars[user.avatar_id]}"/></p>
+                    <p class="text-center m-0">${user.name}</p>
                 </div>`);
     }
 }
