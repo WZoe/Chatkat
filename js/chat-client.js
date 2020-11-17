@@ -35,8 +35,11 @@ $(document).ready(function () {
     });
 
     socketio.on("switch_room_response", function (data) {
-        //console.log("switch room response",data)
+        console.log("switch room response",data)
         if (data['msg'] == "success") {
+            // hide modal
+            $(".alert").remove();
+            $("#joinRoomModal").modal("hide");
             // leave current room
             leaveRoom(data);
         } else {
@@ -54,7 +57,7 @@ $(document).ready(function () {
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>`)
+        </div>`);
         }
     });
 
@@ -70,9 +73,6 @@ $(document).ready(function () {
 
     socketio.on("join_room_response", function (data) {
         //console.log("join room response", data)
-        if (data['operator'] == true) {
-            $("#joinRoomModal").modal("hide");
-        }
         displayAllRooms(data['rooms']);
     });
 
