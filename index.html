@@ -32,8 +32,9 @@
                 </div>
             </div>
             <div class="row ml-3 mr-3">
-                <button class="btn btn-secondary btn-block" id="createRoom" data-toggle="modal"
-                        data-target="#createRoomModal"><h3>Create Room</h3></button>
+                <button class="btn btn-secondary btn-block btn-lg" id="createRoom" data-toggle="modal"
+                        data-target="#createRoomModal">Create Room
+                </button>
             </div>
         </div>
         <!--        mid col: chat history-->
@@ -52,7 +53,7 @@
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everyone
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" value="0">Everyone</a>
+                                <a class="dropdown-item">Everyone</a>
                             </div>
                         </div>
                         <input type="text" class="form-control" id="message_input"/>
@@ -76,31 +77,31 @@
                 <h5 class="row m-3 color-primary text-white p-1">Online Users</h5>
                 <div class="row pl-4 pr-4" id="onlineUsers">
                     <!--                button group is modified from https://getbootstrap.com/docs/4.0/components/button-group/-->
-                    <div class="user m-2">
-                        <p class="text-center m-0"><img class="avatar" src="/img/avatar-1.png"/></p>
-                        <p class="m-0 text-center">USEE</p>
-                        <div class="userControl btn-group-sm">
-                            <button class="btn btn-secondary">Kick</button>
-                            <button class="btn btn-danger">Ban</button>
-                        </div>
-                    </div>
-                    <div class="user m-2">
-                        <p class="text-center m-0"><img class="avatar" src="/img/avatar-1.png"/></p>
-                        <p class="m-0 text-center">USEE</p>
-                        <div class="userControl btn-group-sm">
-                            <button class="btn btn-secondary">Kick</button>
-                            <button class="btn btn-danger">Ban</button>
-                        </div>
-                    </div>
+                    <!--                    <div class="user m-2">-->
+                    <!--                        <p class="text-center m-0"><img class="avatar" src="/img/avatar-1.png"/></p>-->
+                    <!--                        <p class="m-0 text-center">USEE</p>-->
+                    <!--                        <div class="userControl btn-group-sm">-->
+                    <!--                            <button class="btn btn-secondary">Kick</button>-->
+                    <!--                            <button class="btn btn-danger">Ban</button>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="user m-2">-->
+                    <!--                        <p class="text-center m-0"><img class="avatar" src="/img/avatar-1.png"/></p>-->
+                    <!--                        <p class="m-0 text-center">USEE</p>-->
+                    <!--                        <div class="userControl btn-group-sm">-->
+                    <!--                            <button class="btn btn-secondary">Kick</button>-->
+                    <!--                            <button class="btn btn-danger">Ban</button>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
             </div>
             <div class="color-white rounded  p-1  mb-2">
                 <h5 class="row m-3  color-primary text-white p-1">Banned Users</h5>
                 <div class="row   pl-4 pr-4" id="bannedUsers">
-                    <div class="user m-2">
-                        <img class="avatar" src="/img/avatar-1.png"/>
-                        <p>USERNAME</p>
-                    </div>
+                    <!--                    <div class="user m-2">-->
+                    <!--                        <img class="avatar" src="/img/avatar-1.png"/>-->
+                    <!--                        <p>USERNAME</p>-->
+                    <!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -134,35 +135,35 @@
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-1" value="1"
                            checked>
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-1.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-1.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-2" value="2">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-2.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-2.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-3" value="3">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-3.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-3.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-4" value="4">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-4.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-4.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-5" value="5">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-5.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-5.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-6" value="6">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-6.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-6.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-7" value="7">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-7.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-7.png" alt="avatar"/></label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="avatar-8" value="8">
-                    <label class="form-check-label"><img class="avatar" src="img/avatar-8.png"/></label>
+                    <label class="form-check-label"><img class="avatar" src="img/avatar-8.png" alt="avatar"/></label>
                 </div>
             </div>
             <div class="modal-footer">
@@ -256,29 +257,41 @@
                 <!--                form group is modified from https://getbootstrap.com/docs/4.0/components/forms/-->
                 <div class="form-group">
                     <button class="btn btn-outline-secondary memebtn" value="1"><img class="meme"
-                                                                                     src="img/emoji-1.png"/></button>
+                                                                                     src="img/emoji-1.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="2"><img class="meme"
-                                                                                     src="img/emoji-2.png"/></button>
+                                                                                     src="img/emoji-2.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="3"><img class="meme"
-                                                                                     src="img/emoji-3.png"/></button>
+                                                                                     src="img/emoji-3.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="4"><img class="meme"
-                                                                                     src="img/emoji-4.png"/></button>
+                                                                                     src="img/emoji-4.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="5"><img class="meme"
-                                                                                     src="img/emoji-5.png"/></button>
+                                                                                     src="img/emoji-5.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="6"><img class="meme"
-                                                                                     src="img/emoji-6.png"/></button>
+                                                                                     src="img/emoji-6.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="7"><img class="meme"
-                                                                                     src="img/emoji-7.png"/></button>
+                                                                                     src="img/emoji-7.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="8"><img class="meme"
-                                                                                     src="img/emoji-8.png"/></button>
+                                                                                     src="img/emoji-8.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="9"><img class="meme"
-                                                                                     src="img/emoji-9.png"/></button>
+                                                                                     src="img/emoji-9.png" alt="emoji"/>
+                    </button>
                     <button class="btn btn-outline-secondary memebtn" value="10"><img class="meme"
-                                                                                      src="img/emoji-10.png"/></button>
+                                                                                      src="img/emoji-10.png"
+                                                                                      alt="emoji"/></button>
                     <button class="btn btn-outline-secondary memebtn" value="11"><img class="meme"
-                                                                                      src="img/emoji-11.png"/></button>
+                                                                                      src="img/emoji-11.png"
+                                                                                      alt="emoji"/></button>
                     <button class="btn btn-outline-secondary memebtn" value="12"><img class="meme"
-                                                                                      src="img/emoji-12.png"/></button>
+                                                                                      src="img/emoji-12.png"
+                                                                                      alt="emoji"/></button>
                 </div>
             </div>
         </div>
@@ -320,5 +333,5 @@
 <!--done: display all users-->
 <!--done: verify creator and display and ban / kick user-->
 <!--done: ask for password when enter protected room-->
-<!--todo: code formatting-->
-<!--todo: html validation-->
+<!--done: code formatting-->
+<!--done: html validation-->
