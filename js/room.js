@@ -99,15 +99,20 @@ function showRHSInfo(data){
         let user = onlineUsers[i];
         let creatorContent = '';
         if(isCreator==true && user.id!=data['creator'].id){
-            creatorContent = "<div class=\"userControl btn-group-sm\">\n " +
-                "<button class=\"btn btn-secondary\">Kick</button>\n " +
-                "<button class=\"btn btn-danger\">Ban</button>\n </div>";
+            creatorContent = `<div class=\"userControl btn-group-sm\">\n 
+                <button class=\"btn btn-secondary kick-user\" id='${user.id}'>Kick</button>\n
+                <button class=\"btn btn-danger ban-user\" id='${user.id}'>Ban</button>\n </div>`;
         }
         $("#onlineUsers").append(`<div class="user m-2">
                     <p class="text-center m-0"><img class="avatar" src="${avatars[user.avatar_id]}"/></p>
                     <p class="text-center m-0">${user.name}</p>
                     ${creatorContent}
                 </div>`);
+    }
+    // give creator rights to kick and ban user
+    if(isCreator==true){
+        kickUser();
+        banUser();
     }
     $("#bannedUsers").empty();
     for(let i in bannedUsers){
@@ -117,4 +122,16 @@ function showRHSInfo(data){
                     <p>${user.name}</p>
                 </div>`);
     }
+}
+
+function kickUser(){
+    $(".kick-user").click(function(){
+        console.log(this.id);
+    })
+}
+
+function banUser(){
+    $(".ban-user").click(function(){
+        console.log(this.id);
+    })
 }
