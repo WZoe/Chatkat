@@ -48,7 +48,8 @@ io.sockets.on("connection", function (socket) {
         // create user
         let newUser = new myData.User(id, data["name"], parseInt(data["avatar_id"])-1, 1);
         myData.users[id] = newUser;
-        lobby.user_list.push(id);
+        //lobby.user_list.push(id);
+        myData.rooms[1].user_in(id);
         socket.join(1);
 
         myData.users[id] = newUser;
@@ -155,7 +156,7 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("start_typing", function () {
-        console.log("start typing")
+        console.log("start typing",id)
         if(id in myData.users){
             let roomId = myData.users[id].current_room_id;
             let res = myData.rooms[roomId].user_start_typing(id);
@@ -164,7 +165,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("stop_typing", function () {
-        console.log("stop typing")
+        console.log("stop typing",id)
         let roomId = myData.users[id].current_room_id;
         let res = myData.rooms[roomId].user_stop_typing(id);
         io.to(roomId).emit("stop_typing_response", res);
@@ -196,11 +197,10 @@ io.sockets.on("connection", function (socket) {
             io.to(id).emit("request_current_users_response", msg)
             console.log(msg)
         }
-
     })
 
     socket.on('check_message_target', function (data) {
-        console.log(data)
+        console.log("check_message_target",id)
         // find sender name
         let sender = myData.users[data['sender_id']];
         let msg={"sender_name":sender.name, "avatar_id":sender.avatar_id, "avatars":myData.avatars};
@@ -241,6 +241,26 @@ io.sockets.on("connection", function (socket) {
             //remove from users
             delete myData.users[id]
             io.to(currentRoom.id).emit("disconnect_response", myData.rooms);
+        }
+    })
+
+    socket.on("kick_user", function (userId) {
+        console.log("kick user");
+        if (myData.users.hasOwnProperty(userId)) {
+            // kicked user leave current room
+            let roomToLeave=myData.rooms[myData.users[userId].current_room_id];
+            roomToLeave.user_out(userId);
+            // kicked user's socket leave room
+            io.sockets.sockets.get(userId).leave(roomToLeave.id);
+            // kicked user back to lobby
+            myData.users[userId].current_room_id = 1;
+            // kicked user's socket join room
+            io.sockets.sockets.get(userId).join(1);
+            myData.rooms[1].user_in(userId);
+            // send to kicked user = kicked user leave room
+            socket.to(userId).emit("leave_room_response", {'operator':true, 'rooms':myData.rooms});
+            // send to all current users in the room (after kicking out)
+            io.to(roomToLeave.id).emit("leave_room_response", {'operator':false, 'rooms':myData.rooms});
         }
     })
 });

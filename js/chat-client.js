@@ -40,7 +40,7 @@ $(document).ready(function () {
         console.log("join room response", data)
         if(data['operator']==true){
             if(data['msg']=="success"){
-                joinRoomSuccess(data['rooms']);
+                joinRoomSuccess(data['rooms']);  // include display all rooms
             }
             else{
                 // remove previous alerts
@@ -63,9 +63,7 @@ $(document).ready(function () {
         if(data['operator']==true) {
             clearChatLog();
         }
-        else{
-            displayAllRooms(data['rooms']);
-        }
+        displayAllRooms(data['rooms']);
     });
 
     socketio.on("create_room_response",function(data) {

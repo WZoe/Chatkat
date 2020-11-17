@@ -50,13 +50,12 @@ function joinRoom(newRoomId, hasLock){
 
 function leaveRoom(){
     $(".roomListItem").removeClass("selected");
-    socketio.emit("leave_room", null);
+    socketio.emit("leave_room");
 }
 
 function joinRoomSuccess(rooms){
     $("#joinRoomModal").modal("hide");
     displayAllRooms(rooms);
-    //$(".roomListItem#"+room.id).addClass("selected");
 }
 
 // call when first login & every time creates a new room
@@ -73,6 +72,7 @@ function displayAllRooms(rooms){
             </div>
         </div>`);
     }
+    // get current room id
     getCurrentRoomId();
     // enable switch room
     switchRoom();
@@ -82,7 +82,7 @@ function displayAllRooms(rooms){
 }
 
 function getCurrentRoomId(){
-    socketio.emit("get_current_room_id", null);
+    socketio.emit("get_current_room_id");
 }
 
 function showRHSInfo(data){
@@ -126,7 +126,7 @@ function showRHSInfo(data){
 
 function kickUser(){
     $(".kick-user").click(function(){
-        console.log(this.id);
+        socketio.emit("kick_user", this.id);
     })
 }
 
