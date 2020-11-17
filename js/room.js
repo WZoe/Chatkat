@@ -132,6 +132,7 @@ function kickUser(){
 
 function banUser(){
     $(".ban-user").click(function(){
-        console.log(this.id);
+        socketio.emit("kick_user", this.id);
+        socketio.emit("ban_user", this.id);
     })
 }

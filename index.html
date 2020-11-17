@@ -201,6 +201,7 @@
     </div>
 </div>
 <!--join room-->
+<!--join room with password-->
 <div class="modal fade" id="joinRoomModal" tabindex="-1" role="dialog"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -220,6 +221,22 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="joinRoomModalSubmit">Join</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--join room without password alert modal-->
+<div class="modal fade" id="joinRoomAlertModal" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Join Room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="joinRoomAlertModalBody">
             </div>
         </div>
     </div>
@@ -301,7 +318,7 @@
 <!--done: switch chat rooms and update users in the room-->
 <!--done: user is typing-->
 <!--done: display all users-->
-<!--todo: verify creator and display and ban / kick user-->
+<!--done: verify creator and display and ban / kick user-->
 <!--done: ask for password when enter protected room-->
 <!--todo: code formatting-->
 <!--todo: html validation-->

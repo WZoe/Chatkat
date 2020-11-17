@@ -66,7 +66,6 @@ class Room{
     }
 
     ban_user(user_id){
-        this.user_out(user_id);
         this.ban_list.push(user_id);
     }
 }

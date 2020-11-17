@@ -1,6 +1,4 @@
 let socketio;
-let currentRoomId;
-let currentRoom;
 
 $(document).ready(function () {
     socketio = io.connect();
@@ -43,9 +41,19 @@ $(document).ready(function () {
                 joinRoomSuccess(data['rooms']);  // include display all rooms
             }
             else{
+                // join room failed, join back to lobby
+                socketio.emit("join_room", {"room_id":1, "hasLock":false});
+                let modalBody;
+                if($("#joinRoomModal").hasClass('in')){
+                    modalBody = $("#joinRoomModalBody");
+                }
+                else{
+                    $("#joinRoomAlertModal").modal("show");
+                    modalBody = $("#joinRoomAlertModalBody");
+                }
                 // remove previous alerts
                 $(".alert").remove();
-                $("#joinRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+                modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
              ${data['msg']}
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

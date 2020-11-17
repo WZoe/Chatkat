@@ -103,11 +103,16 @@ io.sockets.on("connection", function (socket) {
         console.log("join room");
         let room_id = parseInt(data['room_id']);
         let msg = '';
+        // if room has password
         if(data['hasLock']==true){
             let passwordInput = data['password'];
             if(passwordInput != myData.rooms[room_id].password){
                 msg = "Your password is not correct! Please try again.";
             }
+        }
+        // check if user is banned from this room
+        if(myData.rooms[room_id].ban_list.includes(id)){
+            msg = "You're banned from this room! Directing you back to Lobby...";
         }
         if(msg==''){
             // join room
@@ -261,6 +266,16 @@ io.sockets.on("connection", function (socket) {
             socket.to(userId).emit("leave_room_response", {'operator':true, 'rooms':myData.rooms});
             // send to all current users in the room (after kicking out)
             io.to(roomToLeave.id).emit("leave_room_response", {'operator':false, 'rooms':myData.rooms});
+        }
+    })
+
+    socket.on("ban_user", function (userId) {
+        console.log("ban user");
+        if (myData.users.hasOwnProperty(userId)) {
+            // ban user from this room (creator in)
+            let roomToBan=myData.rooms[myData.users[id].current_room_id];
+            roomToBan.ban_user(userId);
+            //io.to(roomToLeave.id).emit("leave_room_response", {'operator':false, 'rooms':myData.rooms});
         }
     })
 });
