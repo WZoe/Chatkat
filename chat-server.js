@@ -135,19 +135,21 @@ io.sockets.on("connection", function (socket) {
 
     socket.on('leave_room', function () {
         console.log("leave room");
-        // current user leave current room
-        let room_id = myData.users[id].current_room_id;
-        // if user set current_room_id
-        if (room_id) {
-            // socket leave room
-            socket.leave(room_id);
-            myData.rooms[room_id].user_out(id);
-            myData.users[id].current_room_id = null;
+        if(myData.users.hasOwnProperty(id)){
+            // current user leave current room
+            let room_id = myData.users[id].current_room_id;
+            // if user set current_room_id
+            if(room_id){
+                // socket leave room
+                socket.leave(room_id);
+                myData.rooms[room_id].user_out(id);
+                myData.users[id].current_room_id = null;
+            }
+            // send to room leaver
+            io.to(id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':true}) // respond just to this user
+            // send to other users in the same room
+            socket.to(room_id).emit("leave_room_response", {'rooms':myData.rooms, 'operator':false}); // send to all users in room except sender
         }
-        // send to room leaver
-        io.to(id).emit("leave_room_response", {'rooms': myData.rooms, 'operator': true}) // respond just to this user
-        // send to other users in the same room
-        socket.to(room_id).emit("leave_room_response", {'rooms': myData.rooms, 'operator': false}); // send to all users in room except sender
     });
 
     socket.on('send_message', function (data) {
@@ -241,13 +243,14 @@ io.sockets.on("connection", function (socket) {
     socket.on("disconnect", function () {
         if (myData.users.hasOwnProperty(id)) {
             //remove from currentRoom's user_list
-            console.log("destroying user" + id)
-            let currentRoom = myData.rooms[myData.users[id].current_room_id]
-            currentRoom.user_out(id)
-            // todo:broadcast to the room this user left
-            //remove from users
-            delete myData.users[id]
-            io.to(currentRoom.id).emit("disconnect_response", myData.rooms);
+            console.log("destroying user"+id)
+            if(myData.users[id].current_room_id){
+                let currentRoom=myData.rooms[myData.users[id].current_room_id]
+                currentRoom.user_out(id)
+                //remove from users
+                delete myData.users[id]
+                io.to(currentRoom.id).emit("disconnect_response", myData.rooms);
+            }
         }
     })
 

@@ -39,23 +39,28 @@ $(document).ready(function () {
         if (data['operator'] == true) {
             if (data['msg'] == "success") {
                 joinRoomSuccess(data['rooms']);  // include display all rooms
-            } else {
-                // join room failed, join back to lobby
-                socketio.emit("join_room", {"room_id": 1, "hasLock": false});
+            }
+            else{
                 let modalBody;
-                if ($("#joinRoomModal").hasClass('in')) {
+                if($("#joinRoomModal").hasClass('show')){
                     modalBody = $("#joinRoomModalBody");
                 } else {
                     $("#joinRoomAlertModal").modal("show");
                     modalBody = $("#joinRoomAlertModalBody");
                 }
                 // remove previous alerts
-                // $(".alert").remove();
-                modalBody.html(`
-<div class="alert alert-danger" role="alert">
-  ${data['msg']}
-</div>
-`)
+                $(".alert").remove();
+                modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+             ${data['msg']}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>`)
+                modalBody.prev().find('.close').click(function(){
+                    console.log("click close modal")
+                    // join room failed, join back to lobby
+                    socketio.emit("join_room", {"room_id":1, "hasLock":false});
+                });
             }
         } else {
             displayAllRooms(data['rooms']);
