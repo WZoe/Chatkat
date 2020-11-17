@@ -96,7 +96,6 @@ $("#logInModalSubmit").click(function () {
     // check empty nickname
     let nickname=$("#nickname").val()
     if (nickname == "") {
-        console.log("yeah")
         // this is cited from https://getbootstrap.com/docs/4.0/components/alerts/#dismissing
         $("#logInModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
  Nickname cannot be empty!
@@ -129,8 +128,20 @@ $(".dropdown-toggle").click(function () {
 })
 
 $("#createRoomModalSubmit").click(function(){
-    $("#createRoomModal").modal("toggle")
-    createRoom();
+    //check empty room name
+    let roomname=$("#roomName").val()
+    if (roomname == "") {
+        // this is cited from https://getbootstrap.com/docs/4.0/components/alerts/#dismissing
+        $("#createRoomModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
+ Room name cannot be empty!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`)
+    } else {
+        $("#createRoomModal").modal("toggle")
+        createRoom();
+    }
 })
 
 function clearChatLog() {
