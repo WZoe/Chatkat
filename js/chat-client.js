@@ -30,12 +30,12 @@ $(document).ready(function () {
 
     socketio.on("get_room_info_response", function (data) {
         // display all rooms
-        console.log(data)
+        // console.log(data)
         showRHSInfo(data);
     });
 
     socketio.on("join_room_response", function (data) {
-        console.log("join room response", data)
+        // console.log("join room response", data)
         if (data['operator'] == true) {
             if (data['msg'] == "success") {
                 joinRoomSuccess(data['rooms']);  // include display all rooms
@@ -50,13 +50,12 @@ $(document).ready(function () {
                     modalBody = $("#joinRoomAlertModalBody");
                 }
                 // remove previous alerts
-                $(".alert").remove();
-                modalBody.append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
-             ${data['msg']}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>`)
+                // $(".alert").remove();
+                modalBody.html(`
+<div class="alert alert-danger" role="alert">
+  ${data['msg']}
+</div>
+`)
             }
         } else {
             displayAllRooms(data['rooms']);
@@ -64,7 +63,7 @@ $(document).ready(function () {
     });
 
     socketio.on("leave_room_response", function (data) {
-        console.log("leave room response", data);
+        // console.log("leave room response", data);
         if (data['operator'] == true) {
             clearChatLog();
         }
@@ -103,7 +102,7 @@ $(document).ready(function () {
 
 
     socketio.on("check_message_target_response", function (data) {
-        console.log(data)
+        // console.log(data)
         let content = '';
         if (data['type'] == 'content') {
             content = "<p>" + data['content'] + "</p>";
@@ -163,7 +162,7 @@ $("#logInModalSubmit").click(function () {
     // check empty nickname
     let nickname = $("#nickname").val()
     if (nickname == "") {
-        console.log("yeah")
+        // console.log("yeah")
         // this is cited from https://getbootstrap.com/docs/4.0/components/alerts/#dismissing
         $("#logInModalBody").append(`<div class="mt-1 alert alert-danger alert-dismissible fade show" role="alert">
  Nickname cannot be empty!
@@ -179,6 +178,13 @@ $("#logInModalSubmit").click(function () {
 
 // send msg
 $("#send").click(sendMessage)
+// modified from https://stackoverflow.com/questions/18160342/jquery-how-to-trigger-click-event-on-pressing-enter-key
+$("#message_input").keypress(function (e) {
+    let key = e.which;
+    if (key == 13) {
+        sendMessage()
+    }
+})
 
 // send meme
 $(".memebtn").click(function () {
@@ -200,7 +206,7 @@ $(".dropdown-toggle").click(function () {
         let cnt = 1;
         for (let i in users) {
             let user = users[i]
-            console.log(user)
+            // console.log(user)
             $(".dropdown-menu").append(`
             <a class="dropdown-item" value="${user.id}">${user.name}</a>
             `)

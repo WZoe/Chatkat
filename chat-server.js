@@ -1,7 +1,6 @@
 // Require the packages we will use:
 const http = require("http"),
     fs = require("fs"),
-    url = require("url"),
     path = require("path");
 let myData = require('./myData');
 
@@ -160,14 +159,14 @@ io.sockets.on("connection", function (socket) {
         if (data['receiver_id'] == 0) {
             io.to(roomId).emit("send_message_response", msg) // broadcast the message to other users
         } else {
-            console.log("sending to only 2 people")
+            // console.log("sending to only 2 people")
             io.to(id).emit("send_message_response", msg);
             io.to(data['receiver_id']).emit("send_message_response", msg);
         }
     });
 
     socket.on("start_typing", function () {
-        console.log("start typing", id)
+        // console.log("start typing", id)
         if (id in myData.users) {
             let roomId = myData.users[id].current_room_id;
             let res = myData.rooms[roomId].user_start_typing(id);
@@ -176,7 +175,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("stop_typing", function () {
-        console.log("stop typing", id)
+        // console.log("stop typing", id)
         let roomId = myData.users[id].current_room_id;
         let res = myData.rooms[roomId].user_stop_typing(id);
         io.to(roomId).emit("stop_typing_response", res);
@@ -185,18 +184,18 @@ io.sockets.on("connection", function (socket) {
     socket.on("request_current_users", function (data) {
         let room = myData.rooms[myData.users[id].current_room_id];
         let users = room.user_list;
-        console.log("userlist" + users)
+        // console.log("userlist" + users)
         if (data["exclude_self"]) {
             let otherUsers = [];
             for (let i in users) {
                 if (users[i] != id && users[i] != 0) {
-                    console.log(users[i])
+                    // console.log(users[i])
                     otherUsers.push(myData.users[users[i]])
                 }
             }
             let msg = {"users": otherUsers};
             io.to(id).emit("request_current_users_response", msg)
-            console.log(msg)
+            // console.log(msg)
         } else {
             let allUsers = [];
             for (let i in users) {
@@ -206,7 +205,7 @@ io.sockets.on("connection", function (socket) {
             }
             let msg = {"users": allUsers};
             io.to(id).emit("request_current_users_response", msg)
-            console.log(msg)
+            // console.log(msg)
         }
     })
 

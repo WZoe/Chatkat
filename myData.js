@@ -33,7 +33,7 @@ class Room {
     user_start_typing(user_id) {
         this.typing.push(user_id);
         let last = this.typing[this.typing.length - 1];
-        console.log(this.typing)
+        // console.log(this.typing)
         if (this.typing.length === 1) {
             // return true when it's the first user typing
             return {"show": true, "fade": false, "user": users[last]};
@@ -44,7 +44,7 @@ class Room {
     user_stop_typing(user_id) {
         let idx = this.typing.indexOf(user_id);
         this.typing.splice(idx, 1);
-        console.log(this.typing)
+        // console.log(this.typing)
         if (this.typing.length === 0) {
             return {"show": false, "fade": true};
         } else {
