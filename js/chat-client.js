@@ -24,10 +24,10 @@ $(document).ready(function () {
         }
     });
 
-    socketio.on("get_room_info_response",function(room) {
+    socketio.on("get_room_info_response",function(data) {
         // display all rooms
-        console.log(room)
-        showRHSInfo(room);
+        console.log(data)
+        showRHSInfo(data);
     });
 
     socketio.on("join_room_response",function(data) {
