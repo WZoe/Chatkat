@@ -3,6 +3,6 @@
   "author": "module6-group-module6-475518-474348",
   "version": "1.0.0",
   "dependencies": {
-    "socket.io": "3.0.1"
+    "socket.io": "~3.0.1"
   }
 }
