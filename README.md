@@ -13,3 +13,8 @@ http://ec2-54-191-166-77.us-west-2.compute.amazonaws.com:3456/
 - Users can choose their avatars from our collection.
 
 - Users can send emojis to the chat.
+
+
+
+### Grading Feedback
+no points deducted, good job
